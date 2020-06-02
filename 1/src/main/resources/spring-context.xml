@@ -7,7 +7,7 @@
     <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QustionDaoSimple">
     </bean>
     <bean id="questionService" class="com.whoisacat.edu.testingApp1.service.QuestionService">
-        <property name="dao" ref="questionDao"/>
-        <property name="fileName" value="questions.csv"/>
+        <constructor-arg name="dao" ref="questionDao"/>
+        <constructor-arg name="fileName" value="questions.csv"/>
     </bean>
 </beans>

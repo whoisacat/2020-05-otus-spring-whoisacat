@@ -39,15 +39,13 @@ public class QuestionServiceTest{
     @Test
     public void readList(){
 
-        QuestionService service = new QuestionService();
-        service.setDao(dao);
-        service.setFileName(TWO_QUESTIONS);
+        QuestionService service = new QuestionService(dao,TWO_QUESTIONS);
         List<Question> list = service.readList();
         assertEquals(2,list.size());
         assertEquals(list,Arrays.asList(questions1));
         assertNotSame(list,Arrays.asList(questions1));
 
-        service.setFileName(THREE_QUESTIONS);
+        service = new QuestionService(dao,THREE_QUESTIONS);
         list = service.readList();
         assertEquals(3,list.size());
         assertEquals(list,Arrays.asList(questions2));

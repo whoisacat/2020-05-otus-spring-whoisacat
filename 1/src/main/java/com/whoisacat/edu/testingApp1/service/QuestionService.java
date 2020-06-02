@@ -10,26 +10,12 @@ public class QuestionService implements IQuestionService{
     private IQuestionDao dao;
     private String fileName;
 
-    public QuestionService(){
+    public QuestionService(IQuestionDao dao,String fileName){
+        this.dao = dao;
+        this.fileName = fileName;
     }
 
     public List<Question> readList(){
         return dao.loadObjectList(fileName);
-    }
-
-    public IQuestionDao getDao(){
-        return dao;
-    }
-
-    public void setDao(IQuestionDao dao){
-        this.dao = dao;
-    }
-
-    public String getFileName(){
-        return fileName;
-    }
-
-    public void setFileName(String fileName){
-        this.fileName = fileName;
     }
 }
