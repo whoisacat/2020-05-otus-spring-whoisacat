@@ -4,10 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QustionDaoSimple">
+    <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QuestionDaoCsvImpl">
+        <constructor-arg value="questions.csv"/>
     </bean>
-    <bean id="questionService" class="com.whoisacat.edu.testingApp1.service.QuestionService">
+    <bean id="reader" class="com.whoisacat.edu.testingApp1.service.QuestionReaderServiceImpl">
         <constructor-arg name="dao" ref="questionDao"/>
-        <constructor-arg name="fileName" value="questions.csv"/>
+    </bean>
+    <bean id="writer" class="com.whoisacat.edu.testingApp1.service.QuestionWriterServiceImpl">
+        <constructor-arg name="reader" ref="reader"/>
+        <constructor-arg name="printStream">
+            <null/>
+        </constructor-arg>
     </bean>
 </beans>

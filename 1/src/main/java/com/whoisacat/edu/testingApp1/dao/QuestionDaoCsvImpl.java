@@ -10,9 +10,15 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
-public class QustionDaoSimple implements IQuestionDao{
+public class QuestionDaoCsvImpl implements QuestionDao{
 
-    public List<Question> loadObjectList(String fileName) {
+    private final String fileName;
+
+    public QuestionDaoCsvImpl(String fileName){
+        this.fileName = fileName;
+    }
+
+    public List<Question> loadObjectList() throws MyCsvReaderException {
         try {
             CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
             CsvMapper mapper = new CsvMapper();
@@ -21,8 +27,7 @@ public class QustionDaoSimple implements IQuestionDao{
                     mapper.reader(Question.class).with(bootstrapSchema).readValues(file);
             return readValues.readAll();
         } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+            throw new MyCsvReaderException();
         }
     }
 }

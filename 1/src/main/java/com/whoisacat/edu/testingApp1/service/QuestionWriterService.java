@@ -4,7 +4,7 @@ import com.whoisacat.edu.testingApp1.domain.Question;
 
 import java.util.List;
 
-public interface IQuestionService{
+public interface QuestionWriterService{
 
-    List<Question> readList();
+    void writeQuestionsList();
 }

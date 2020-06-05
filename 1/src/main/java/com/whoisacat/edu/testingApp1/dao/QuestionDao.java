@@ -4,7 +4,7 @@ import com.whoisacat.edu.testingApp1.domain.Question;
 
 import java.util.List;
 
-public interface IQuestionDao{
+public interface QuestionDao{
 
-    List<Question> loadObjectList(String fileName);
+    List<Question> loadObjectList() throws MyCsvReaderException;
 }
