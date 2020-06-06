@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class QuestionReaderServiceImpl implements QuestionReaderService{
+public class QuizzReaderServiceSimple implements QuizzReaderService{
 
     private final QuestionDao dao;
 
-    public QuestionReaderServiceImpl(QuestionDao questionDao){
+    public QuizzReaderServiceSimple(QuestionDao questionDao){
         this.dao = questionDao;
     }
 

@@ -5,7 +5,7 @@ import com.whoisacat.edu.testingApp2.domain.Question;
 
 import java.util.List;
 
-public interface QuestionReaderService{
+public interface QuizzReaderService{
 
     List<Question> readList() throws MyCsvReaderException;
 }

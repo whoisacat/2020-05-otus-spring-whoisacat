@@ -6,12 +6,12 @@ import com.whoisacat.edu.testingApp2.domain.Question;
 import java.io.PrintStream;
 import java.util.List;
 
-public class QuestionWriterServiceImpl implements QuestionWriterService{
+public class PrinterServiceSimple implements PrinterService{
 
-    private final QuestionReaderService reader;
+    private final QuizzReaderService reader;
     private final PrintStream printStream;
 
-    public QuestionWriterServiceImpl(QuestionReaderService reader,PrintStream printStream){
+    public PrinterServiceSimple(QuizzReaderService reader,PrintStream printStream){
         if(printStream == null){
             this.printStream = System.out;
         } else this.printStream = printStream;
@@ -28,5 +28,10 @@ public class QuestionWriterServiceImpl implements QuestionWriterService{
         }catch(MyCsvReaderException e){
             printStream.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void writeLine(String question){
+        printStream.println(question);
     }
 }

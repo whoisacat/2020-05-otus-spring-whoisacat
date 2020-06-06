@@ -1,6 +1,6 @@
 package com.whoisacat.edu.testingApp2;
 
-import com.whoisacat.edu.testingApp2.service.QuestionWriterService;
+import com.whoisacat.edu.testingApp2.service.QuizzService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,6 @@ public class Main {
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(Main.class);
 
-        QuestionWriterService service = context.getBean(QuestionWriterService.class);
-        service.writeQuestionsList();
+        context.getBean(QuizzService.class).run();
     }
 }

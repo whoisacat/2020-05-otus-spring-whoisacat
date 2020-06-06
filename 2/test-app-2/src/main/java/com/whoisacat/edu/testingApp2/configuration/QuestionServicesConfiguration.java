@@ -1,9 +1,6 @@
 package com.whoisacat.edu.testingApp2.configuration;
 
-import com.whoisacat.edu.testingApp2.service.QuestionReaderService;
-import com.whoisacat.edu.testingApp2.service.QuestionWriterService;
-import com.whoisacat.edu.testingApp2.service.QuestionWriterServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.whoisacat.edu.testingApp2.service.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +8,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QuestionServicesConfiguration{
 
-    @Autowired
-    private ApplicationContext appContext;
+    private final ApplicationContext appContext;
+
+    public QuestionServicesConfiguration(ApplicationContext appContext){
+        this.appContext = appContext;
+    }
 
     @Bean
-    public QuestionWriterService questionWriter() {
+    public PrinterService questionWriter() {
+        return new PrinterServiceSimple(appContext.getBean(QuizzReaderService.class),System.out);
+    }
 
-        return new QuestionWriterServiceImpl(appContext.getBean(QuestionReaderService.class),System.out);
+    @Bean
+    public ReaderService readerService() {
+        return new ReaderServiceSimple(System.in);
     }
 }

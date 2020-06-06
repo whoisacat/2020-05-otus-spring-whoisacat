@@ -1,6 +1,8 @@
 package com.whoisacat.edu.testingApp2.service;
 
-public interface QuestionWriterService{
+public interface PrinterService{
 
     void writeQuestionsList();
+
+    void writeLine(String question);
 }

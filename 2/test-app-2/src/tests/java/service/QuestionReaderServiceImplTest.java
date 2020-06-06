@@ -4,7 +4,8 @@ import com.whoisacat.edu.testingApp2.dao.MyCsvReaderException;
 import com.whoisacat.edu.testingApp2.dao.QuestionDao;
 import com.whoisacat.edu.testingApp2.dao.QuestionDaoCsv;
 import com.whoisacat.edu.testingApp2.domain.Question;
-import com.whoisacat.edu.testingApp2.service.QuestionReaderServiceImpl;
+import com.whoisacat.edu.testingApp2.service.QuizzReaderService;
+import com.whoisacat.edu.testingApp2.service.QuizzReaderServiceSimple;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,11 +27,11 @@ public class QuestionReaderServiceImplTest{
 
     @Before
     public void before(){
-        questions1 = new Question[]{new Question(1,"who is there"),
-                new Question(2,"is it you")};
-        questions2 = new Question[]{new Question(1,"who is there"),
-                new Question(2,"hello-hello..."),
-                new Question(3,"is it you")};
+        questions1 = new Question[]{new Question(1,"who is there","l"),
+                new Question(2,"is it you","l")};
+        questions2 = new Question[]{new Question(1,"who is there","l"),
+                new Question(2,"hello-hello...","l"),
+                new Question(3,"is it you","l")};
     }
 
     @Test
@@ -39,7 +40,7 @@ public class QuestionReaderServiceImplTest{
         dao = mock(QuestionDaoCsv.class);
         when(dao.loadObjectList())
                 .thenReturn(Arrays.asList(questions1));
-        QuestionReaderServiceImpl service = new QuestionReaderServiceImpl(dao);
+        QuizzReaderService service = new QuizzReaderServiceSimple(dao);
         List<Question> list = service.readList();
         assertEquals(2,list.size());
         assertEquals(list,Arrays.asList(questions1));
@@ -47,7 +48,7 @@ public class QuestionReaderServiceImplTest{
 
         when(dao.loadObjectList())
                 .thenReturn(Arrays.asList(questions2));
-        service = new QuestionReaderServiceImpl(dao);
+        service = new QuizzReaderServiceSimple(dao);
         list = service.readList();
         assertEquals(3,list.size());
         assertEquals(list,Arrays.asList(questions2));

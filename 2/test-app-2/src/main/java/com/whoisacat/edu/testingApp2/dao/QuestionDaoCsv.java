@@ -26,7 +26,7 @@ public class QuestionDaoCsv implements QuestionDao{
                     mapper.reader(Question.class).with(bootstrapSchema).readValues(file);
             return readValues.readAll();
         } catch (Exception e) {
-            throw new MyCsvReaderException();
+            throw new MyCsvReaderException(e);
         }
     }
 }
