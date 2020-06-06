@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QuestionDaoCsvImpl">
+    <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QuestionDaoCsv">
         <constructor-arg value="questions.csv"/>
     </bean>
     <bean id="reader" class="com.whoisacat.edu.testingApp1.service.QuestionReaderServiceImpl">

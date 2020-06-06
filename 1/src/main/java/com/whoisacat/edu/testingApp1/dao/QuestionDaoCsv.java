@@ -7,14 +7,13 @@ import com.whoisacat.edu.testingApp1.domain.Question;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 
-public class QuestionDaoCsvImpl implements QuestionDao{
+public class QuestionDaoCsv implements QuestionDao{
 
     private final String fileName;
 
-    public QuestionDaoCsvImpl(String fileName){
+    public QuestionDaoCsv(String fileName){
         this.fileName = fileName;
     }
 

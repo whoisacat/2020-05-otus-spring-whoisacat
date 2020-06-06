@@ -1,9 +1,10 @@
-package com.whoisacat.edu.testingApp1.service;
+package com.whoisacat.edu.testingApp2.service;
 
 import com.whoisacat.edu.testingApp1.dao.MyCsvReaderException;
 import com.whoisacat.edu.testingApp1.dao.QuestionDao;
-import com.whoisacat.edu.testingApp1.dao.QuestionDaoCsvImpl;
+import com.whoisacat.edu.testingApp1.dao.QuestionDaoCsv;
 import com.whoisacat.edu.testingApp1.domain.Question;
+import com.whoisacat.edu.testingApp1.service.QuestionReaderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class QuestionReaderServiceImplTest{
     @Test
     public void readListTest() throws MyCsvReaderException {
 
-        dao = mock(QuestionDaoCsvImpl.class);
+        dao = mock(QuestionDaoCsv.class);
         when(dao.loadObjectList())
                 .thenReturn(Arrays.asList(questions1));
         QuestionReaderServiceImpl service = new QuestionReaderServiceImpl(dao);
