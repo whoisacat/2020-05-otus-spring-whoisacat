@@ -16,7 +16,7 @@ public class QuestionServicesConfiguration{
 
     @Bean
     public PrinterService questionWriter() {
-        return new PrinterServiceSimple(appContext.getBean(QuizzReaderService.class),System.out);
+        return new PrinterServiceSimple(System.out);
     }
 
     @Bean

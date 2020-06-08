@@ -20,12 +20,14 @@ public class PrinterServiceSimpleTest{
     public void test() throws WHOCsvReaderException{
         QuizzReaderServiceSimple reader = mock(QuizzReaderServiceSimple.class);
         when(reader.readList())
-                .thenReturn(Lists.newArrayList(new Question(1,"test1","k"),new Question(2,"test2","k")));
+                .thenReturn(Lists.newArrayList(
+                        new Question(1,"test1","k"),
+                        new Question(2,"test2","k")));
 
         PrintStream testPrinter = new PrintStream(outContent);
 
-        PrinterService writerService = new PrinterServiceSimple(reader,testPrinter);
-        writerService.writeQuestionsList();
+        PrinterService writerService = new PrinterServiceSimple(testPrinter);
+        writerService.writeLine("test1\ntest2\n");
         assertEquals("test1\ntest2\n", outContent.toString());
     }
 }
