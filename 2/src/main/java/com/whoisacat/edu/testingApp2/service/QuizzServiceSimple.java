@@ -11,23 +11,22 @@ import java.util.List;
 public class QuizzServiceSimple implements QuizzService{
 
     private final QuizzReaderService quizzReader;
-    private final PrinterService printerService;
-    private final ReaderService readerService;
+    private final IOService ioService;
 
     public QuizzServiceSimple(QuizzReaderService quizzReader,
-                              PrinterService printerService,
-                              ReaderService readerService){
+                              IOService ioService){
         this.quizzReader = quizzReader;
-        this.printerService = printerService;
-        this.readerService = readerService;
+        this.ioService = ioService;
     }
-    @Override public void run(){
+
+    @Override
+    public void run(){
         List<Question> questions = getQuestions();
         int result = 0;
         for(Question question : questions){
             result += ascQuestion(question);
         }
-        printerService.writeLine(constructAnswer(result).toString());
+        ioService.printString(constructAnswer(result).toString());
     }
 
     private List<Question> getQuestions(){
@@ -41,8 +40,8 @@ public class QuizzServiceSimple implements QuizzService{
     }
 
     private int ascQuestion(Question question){
-        printerService.writeLine(question.getQuestion());
-        String answer = readerService.readString();
+        ioService.printString(question.getQuestion());
+        String answer = ioService.readString();
         if(answer.equals(question.getAnswer())) return 1;
         return 0;
     }

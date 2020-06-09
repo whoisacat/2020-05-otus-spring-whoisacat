@@ -27,7 +27,7 @@ public class PrinterServiceSimpleTest{
         PrintStream testPrinter = new PrintStream(outContent);
 
         PrinterService writerService = new PrinterServiceSimple(testPrinter);
-        writerService.writeLine("test1\ntest2\n");
+        writerService.writeLine("test1\ntest2");
         assertEquals("test1\ntest2\n", outContent.toString());
     }
 }
