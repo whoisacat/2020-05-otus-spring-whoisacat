@@ -1,10 +1,6 @@
 package com.whoisacat.edu.testingApp2.service;
 
-import com.whoisacat.edu.testingApp2.dao.WHOCsvReaderException;
-import com.whoisacat.edu.testingApp2.domain.Question;
-
 import java.io.PrintStream;
-import java.util.List;
 
 public class PrinterServiceSimple implements PrinterService{
 
@@ -13,7 +9,9 @@ public class PrinterServiceSimple implements PrinterService{
     public PrinterServiceSimple(PrintStream printStream){
         if(printStream == null){
             this.printStream = System.out;
-        } else this.printStream = printStream;
+        } else {
+            this.printStream = printStream;
+        }
     }
 
     @Override
