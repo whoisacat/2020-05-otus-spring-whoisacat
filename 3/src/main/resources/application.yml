@@ -1,0 +1,7 @@
+com:
+  whoisacat:
+    edu:
+      testingApp:
+        filename: questions.csv
+      message-source:
+        defaultLocale: ru_RU
