@@ -1,15 +1,17 @@
 package com.whoisacat.edu.quizzboot.service.localization;
 
 import com.whoisacat.edu.Localization;
+import com.whoisacat.edu.quizzboot.service.annotations.Translate;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Aspect
-@Component
+@Service
 public class LocalizationAspect{
 
     private final Localization localization;
@@ -18,8 +20,21 @@ public class LocalizationAspect{
         this.localization = localization;
     }
 
-    @Around("execution(* com.whoisacat.edu.quizzboot.service.ui.PrinterService.*(..))")
-    public Object localizeAround(ProceedingJoinPoint joinPoint) throws Throwable{
+    @Around(value = "@annotation(com.whoisacat.edu.quizzboot.service.annotations.Translate)")
+    public Object localizeIn(ProceedingJoinPoint joinPoint) throws Throwable{
+        Translate methodTranslate = ((MethodSignature)joinPoint.getSignature()).getMethod().getAnnotation(
+                Translate.class);
+        switch(methodTranslate.ioMethod()){
+            case OUT:
+                return translateOut(joinPoint);
+            case IN:
+                return translateIn(joinPoint);
+            default:
+                throw new WHOLacalizationException();
+        }
+    }
+
+    private Object translateOut(ProceedingJoinPoint joinPoint) throws Throwable{
         String inString = (String)joinPoint.getArgs()[0];
         String localized;
         Object[] args = new Object[joinPoint.getArgs().length];
@@ -28,8 +43,8 @@ public class LocalizationAspect{
         }
         try{
             String[] passingArgsArray;
-            if(joinPoint.getArgs().length > 1 && ((int[])joinPoint.getArgs()[1]).length > 0){
-                passingArgsArray = new String[]{"" + ((int[])joinPoint.getArgs()[1])[0]};
+            if(joinPoint.getArgs().length > 1){
+                passingArgsArray = new String[]{"" + (Integer)joinPoint.getArgs()[1]};
             }else {
                 passingArgsArray = new String[]{};
             }
@@ -41,8 +56,8 @@ public class LocalizationAspect{
 
         return joinPoint.proceed(args);
     }
-    @Around("execution(* com.whoisacat.edu.quizzboot.service.ui.ReaderService.readString())")
-    public Object localizeInAround(ProceedingJoinPoint joinPoint) throws Throwable{
+
+    private Object translateIn(ProceedingJoinPoint joinPoint) throws Throwable{
         String inString = (String) joinPoint.proceed(joinPoint.getArgs());
         String localized;
         try{

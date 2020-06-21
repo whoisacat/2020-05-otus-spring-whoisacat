@@ -1,22 +1,18 @@
 package com.whoisacat.edu.quizzboot.service;
 
-import com.whoisacat.edu.Localization;
 import com.whoisacat.edu.quizzboot.dao.WHOCsvReaderException;
 import com.whoisacat.edu.quizzboot.domain.Question;
 import com.whoisacat.edu.quizzboot.service.ui.IOService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class QuizzServiceSystem implements QuizzService{
 
     private final QuizzReaderService quizzReader;
     private final IOService ioService;
-
-    @Autowired private Localization localization1;
 
     public QuizzServiceSystem(QuizzReaderService quizzReader,
                               IOService ioService){

@@ -7,5 +7,7 @@ public interface PrinterService{
         writeString("\n");
     }
 
-    void writeString(String string,int... args);
+    void writeString(String string);
+
+    void writeString(String string,int result);
 }

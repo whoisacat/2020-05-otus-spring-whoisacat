@@ -18,8 +18,14 @@ public class IOServiceSimple implements IOService{
         printer.writeLine(string);
     }
 
-    @Override public void printString(String string,int... args){
-        printer.writeString(string,args);
+    @Override
+    public void printString(String string){
+        printer.writeString(string);
+    }
+
+    @Override
+    public void printString(String string, int result){
+        printer.writeString(string, result);
     }
 
     @Override
