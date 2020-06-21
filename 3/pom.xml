@@ -73,12 +73,6 @@
 			<version>28.0-jre</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.whoisacat</groupId>
-			<artifactId>message-source-starter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

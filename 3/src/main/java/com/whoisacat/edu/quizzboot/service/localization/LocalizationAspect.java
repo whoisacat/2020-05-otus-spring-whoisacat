@@ -1,11 +1,11 @@
 package com.whoisacat.edu.quizzboot.service.localization;
 
-import com.whoisacat.edu.Localization;
 import com.whoisacat.edu.quizzboot.service.annotations.Translate;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalizationAspect{
 
-    private final Localization localization;
+    private final MessageSource localization;
 
-    public LocalizationAspect(Localization localization){
+    public LocalizationAspect(MessageSource localization){
         this.localization = localization;
     }
 
@@ -58,7 +58,7 @@ public class LocalizationAspect{
     }
 
     private Object translateIn(ProceedingJoinPoint joinPoint) throws Throwable{
-        String inString = (String) joinPoint.proceed(joinPoint.getArgs());
+        String inString = ((String) joinPoint.proceed(joinPoint.getArgs())).toLowerCase();
         String localized;
         try{
             localized = localization.getMessage(inString,new String[]{},LocaleContextHolder.getLocale());
