@@ -5,3 +5,7 @@ com:
         filename: questions.csv
       message-source:
         defaultLocale: ru_RU
+
+spring:
+  messages:
+    basename: il8n/bundle
