@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS genre;
+DROP TABLE IF EXISTS author;
+
+CREATE TABLE genre(
+	id BIGINT PRIMARY KEY,
+	"name" VARCHAR(255));
+
+CREATE TABLE author(
+	id BIGINT PRIMARY KEY,
+	"name" VARCHAR(255));
+
+CREATE TABLE book(
+	id BIGINT PRIMARY KEY,
+	"name" VARCHAR(255),
+	author_id BIGINT REFERENCES author(id),
+	genre_id BIGINT REFERENCES genre(id));
