@@ -35,7 +35,7 @@ public class BookServiceJDBC implements BookService{
             throw new WHORequestClientException("Такая книга уже есть, найдены книги - "
                     .concat(buildBooksString(existedBooks)));
         }
-        Book book = new Book(dao.countAll() + 1,bookString,author,genre);
+        Book book = new Book(null,bookString,author,genre);
         dao.insert(book);
         return new StringBuilder(book.getName()).append(" ")
                 .append(book.getAuthor().getName()).append(" ")

@@ -40,8 +40,21 @@ class AuthorDaoJdbcTest{
     @Test
     void insertAuthorsTest(){
         assertThat(6).isEqualTo(dao.count());
-        dao.insert(new Author(dao.count() + 1,"some new author",new ArrayList<>()));
+        dao.insert(new Author(null,"some new author",new ArrayList<>()));
         assertThat(dao.count()).isEqualTo(7);
+    }
+
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @DisplayName(value = "вставить нового автора после удаления автора")
+    @Test
+    void insertAuthorAfterDeletingAuthorAfterInsertingAuthorTest(){
+        dao.insert(new Author(null,"some new author",new ArrayList<>()));
+        dao.insert(new Author(null,"some new author",new ArrayList<>()));
+        assertThat(dao.count()).isEqualTo(8);
+        dao.deleteById(6);
+        assertThat(dao.count()).isEqualTo(7);
+        dao.insert(new Author(null,"some new author",new ArrayList<>()));
+        assertThat(dao.count()).isEqualTo(8);
     }
 
     @DisplayName(value = "найти одного автора по идентефикатору")

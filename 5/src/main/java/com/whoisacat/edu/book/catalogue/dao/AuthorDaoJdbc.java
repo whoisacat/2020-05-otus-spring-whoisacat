@@ -20,8 +20,7 @@ public class AuthorDaoJdbc implements AuthorDao{
 
     private final NamedParameterJdbcOperations jdbc;
 
-    public AuthorDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations)
-    {
+    public AuthorDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations){
         this.jdbc = namedParameterJdbcOperations;
     }
 
@@ -32,8 +31,12 @@ public class AuthorDaoJdbc implements AuthorDao{
 
     @Override
     public void insert(Author author) {
-        Map<String, Object> params = Map.of("id",author.getId(),"name", author.getName());
+        Map<String, Object> params = Map.of("id",getNewId(),"name", author.getName());
         jdbc.update("insert into author (id, \"name\") values (:id, :name)", params);
+    }
+
+    private long getNewId(){
+        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from author",Integer.class);
     }
 
     @Override

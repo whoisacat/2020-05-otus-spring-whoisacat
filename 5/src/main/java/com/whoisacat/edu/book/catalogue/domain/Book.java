@@ -1,19 +1,19 @@
 package com.whoisacat.edu.book.catalogue.domain;
 
 public class Book implements Named{
-    private final long id;
+    private final Long id;
     private final String name;
     private final Author author;
     private final Genre genre;
 
-    public Book(long id,String name,Author author,Genre genre){
+    public Book(Long id,String name,Author author,Genre genre){
         this.id = id;
         this.name = name;
         this.author = author;
         this.genre = genre;
     }
 
-    public long getId(){
+    public Long getId(){
         return id;
     }
 

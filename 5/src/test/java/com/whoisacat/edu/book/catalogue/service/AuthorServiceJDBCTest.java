@@ -30,11 +30,11 @@ import static org.mockito.Mockito.when;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class AuthorServiceJDBCTest{
 
-    private static final Genre GENRE_1 = new Genre(1,"1");
-    private static final Author AUTHOR_1 = new Author(1,"1",new ArrayList<>());
-    private static final Book BOOK_1 = new Book(1,"1",AUTHOR_1,GENRE_1);
-    private static final Author AUTHOR_1_WITH_BOOK = new Author(1,"1",Lists.newArrayList(BOOK_1));
-    private static final Author AUTHOR_2 = new Author(2,"2",new ArrayList<>());
+    private static final Genre GENRE_1 = new Genre(1L,"1");
+    private static final Author AUTHOR_1 = new Author(1L,"1",new ArrayList<>());
+    private static final Book BOOK_1 = new Book(1L,"1",AUTHOR_1,GENRE_1);
+    private static final Author AUTHOR_1_WITH_BOOK = new Author(1L,"1",Lists.newArrayList(BOOK_1));
+    private static final Author AUTHOR_2 = new Author(2L,"2",new ArrayList<>());
 
     @Autowired
     private AuthorServiceJDBC service;

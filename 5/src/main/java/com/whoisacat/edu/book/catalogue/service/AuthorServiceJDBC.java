@@ -39,10 +39,10 @@ public class AuthorServiceJDBC implements AuthorService, NamedService<Author>{
             return authors.get(0);
         }
         if(authors.size() > 1){
-            StringBuilder builder = buildNames(authors);
-            throw new WHORequestClientException("Выберите автора точнее, были найдены - ".concat(builder.toString()));
+            throw new WHORequestClientException("Выберите автора точнее, были найдены - "
+                    .concat(buildNames(authors)));
         }
-        Author author = new Author(dao.count() + 1,authorString,new ArrayList<>());
+        Author author = new Author(null,authorString,new ArrayList<>());
         dao.insert(author);
         return findByNameOrCreate(authorString);
     }
@@ -56,7 +56,6 @@ public class AuthorServiceJDBC implements AuthorService, NamedService<Author>{
         if(authors.isEmpty()){
             return NOT_FOUND;
         }
-        StringBuilder authorsSB = buildNames(authors);
-        return authorsSB.toString();
+        return buildNames(authors);
     }
 }

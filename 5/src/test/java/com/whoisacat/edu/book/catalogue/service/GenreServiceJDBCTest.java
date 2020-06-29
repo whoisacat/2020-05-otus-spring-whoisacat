@@ -26,8 +26,8 @@ import static org.mockito.Mockito.when;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class GenreServiceJDBCTest{
 
-    private static final Genre GENRE_ODIN = new Genre(1,"godin");
-    private static final Genre GENRE_SECONDO = new Genre(2,"second one");
+    private static final Genre GENRE_ODIN = new Genre(1L,"godin");
+    private static final Genre GENRE_SECONDO = new Genre(2L,"second one");
 
     @Autowired GenreServiceJDBC service;
 

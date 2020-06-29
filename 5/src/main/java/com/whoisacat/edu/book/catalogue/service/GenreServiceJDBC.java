@@ -22,10 +22,10 @@ public class GenreServiceJDBC implements GenreService,NamedService<Genre>{
             return genres.get(0);
         }
         if(genres.size() > 1){
-            StringBuilder builder = buildNames(genres);
-            throw new WHORequestClientException("Выберите жанр точнее, были найдены - ".concat(builder.toString()));
+            throw new WHORequestClientException("Выберите жанр точнее, были найдены - "
+                    .concat(buildNames(genres)));
         }
-        Genre author = new Genre(dao.count() + 1,authorString);
+        Genre author = new Genre(null,authorString);
         dao.insert(author);
         return findByNameOrCreate(authorString);
     }
@@ -36,14 +36,11 @@ public class GenreServiceJDBC implements GenreService,NamedService<Genre>{
 
     @Override public String getAllGenresString(){
         List<Genre> genresList = dao.getAll();
-        StringBuilder sb = buildNames(genresList);
-        return sb.toString();
+        return buildNames(genresList);
     }
 
     @Override public String findByName(String name){
-
         List<Genre> genresList = dao.getByName(name);
-        StringBuilder sb = buildNames(genresList);
-        return sb.toString();
+        return buildNames(genresList);
     }
 }

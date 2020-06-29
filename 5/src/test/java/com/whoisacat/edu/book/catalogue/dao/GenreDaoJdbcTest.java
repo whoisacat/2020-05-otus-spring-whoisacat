@@ -36,7 +36,7 @@ class GenreDaoJdbcTest{
     @Test
     void insertGenre(){
         int count = dao.count();
-        Genre genre = new Genre(count + 1,"Новый жанр");
+        Genre genre = new Genre(null,"Новый жанр");
         assertThat(dao.insert(genre)).isEqualTo(1);
         assertThat(dao.count()).isEqualTo(count + 1);
     }
@@ -45,7 +45,7 @@ class GenreDaoJdbcTest{
     @Test
     void dontInsertGenre(){
         int count = dao.count();
-        Genre genre = new Genre(count + 1,"Программирование");
+        Genre genre = new Genre(null,"Программирование");
         assertThat(dao.insert(genre)).isEqualTo(0);
         assertThat(dao.count()).isEqualTo(count);
     }

@@ -33,8 +33,12 @@ public class GenreDaoJdbc implements GenreDao{
         if(!getByName(genre.getName()).isEmpty()){
             return 0;
         }
-        Map<String, Object> params = Map.of("id",genre.getId(),"name", genre.getName());
+        Map<String, Object> params = Map.of("id",getNewId(),"name", genre.getName());
         return jdbc.update("insert into genre (id, \"name\") values (:id, :name)", params);
+    }
+
+    private long getNewId(){
+        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from genre",Integer.class);
     }
 
     @Override

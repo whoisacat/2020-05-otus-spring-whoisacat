@@ -39,9 +39,9 @@ class ApplicationEventsCommandsTest{
     public static final String LOGIN_FIRST_MESSAGE =
             "org.springframework.shell.CommandNotCurrentlyAvailable: Command 'ab' exists but is not currently available because Сначала залогиньтесь";
     public static final String TRUE_LA_LA = "true-la-la";
-    public static final Author AUTHOR = new Author((1),TRUE_LA_LA,new ArrayList<>());
-    public static final Genre GENRE = new Genre((1),TRUE_LA_LA);
-    public static final Book BOOK = new Book((1),TRUE_LA_LA,AUTHOR,GENRE);
+    public static final Author AUTHOR = new Author((1L),TRUE_LA_LA,new ArrayList<>());
+    public static final Genre GENRE = new Genre((1L),TRUE_LA_LA);
+    public static final Book BOOK = new Book((1L),TRUE_LA_LA,AUTHOR,GENRE);
 
     @Autowired Shell shell;
     @MockBean AuthorServiceJDBC authorService;

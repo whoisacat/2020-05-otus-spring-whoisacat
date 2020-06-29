@@ -33,12 +33,16 @@ public class BookDaoJdbc implements BookDao{
 
     @Override
     public int insert(Book book) {
-        Map<String, Object> params = Map.of("id",book.getId(),
+        Map<String, Object> params = Map.of("id",getNewId(),
                 "name", book.getName(),
                 "author_id",book.getAuthor().getId(),
                 "genre_id",book.getGenre().getId());
         return jdbc.update("insert into book (id, \"name\",author_id,genre_id) " +
                 "values (:id, :name,:author_id,:genre_id)", params);
+    }
+
+    private long getNewId(){
+        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from book",Integer.class);
     }
 
     @Override

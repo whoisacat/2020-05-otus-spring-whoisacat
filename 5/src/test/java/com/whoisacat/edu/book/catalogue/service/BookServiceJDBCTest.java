@@ -31,9 +31,9 @@ import static org.mockito.Mockito.when;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class BookServiceJDBCTest{
 
-    private static final Author AUTHOR_ODIN = new Author(1,"odin",new ArrayList<>());
-    private static final Genre GENRE_OGIN = new Genre(1,"ogin");
-    private static final Book BOOK_ODIN = new Book(1,"bodin",AUTHOR_ODIN,GENRE_OGIN);
+    private static final Author AUTHOR_ODIN = new Author(1L,"odin",new ArrayList<>());
+    private static final Genre GENRE_OGIN = new Genre(1L,"ogin");
+    private static final Book BOOK_ODIN = new Book(1L,"bodin",AUTHOR_ODIN,GENRE_OGIN);
     private static final String GENRE_STRING = "genreString";
     private static final String AUTHOR_STRING = "authorString";
 

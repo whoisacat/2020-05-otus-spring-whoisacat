@@ -31,7 +31,7 @@ class BookDaoJdbcTest{
     @Autowired BookDaoJdbc dao;
     private static final Author ROBERT_MARTIN = new Author(3L,"Роберт Мартин",new ArrayList<>());;
     private static final Genre PROGRAMMING = new Genre(1L,"Программирование");
-    private static final Book CLEAN_CODE = new Book(2,"Чистый код",ROBERT_MARTIN,PROGRAMMING);;
+    private static final Book CLEAN_CODE = new Book(2L,"Чистый код",ROBERT_MARTIN,PROGRAMMING);;
 
     @DisplayName("Правильно насчитать шесть книг")
     @Test
@@ -43,7 +43,7 @@ class BookDaoJdbcTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insert(){
-        dao.insert(new Book(dao.countAll() + 1,"Чистая архитектура",
+        dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
                 new Genre(1L,"")));
         assertThat(7).isEqualTo(dao.countAll());
@@ -53,7 +53,7 @@ class BookDaoJdbcTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectAuthorName(){
-        assertThat(1).isEqualTo(dao.insert(new Book(dao.countAll() + 1,"Чистая архитектура",
+        assertThat(1).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
                 new Genre(1L,""))));
         assertThat(dao.getById(dao.countAll()).getAuthor().getName()).isEqualTo("Роберт Мартин");
@@ -63,7 +63,7 @@ class BookDaoJdbcTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectName(){
-        assertThat(1).isEqualTo(dao.insert(new Book(dao.countAll() + 1,"Чистая архитектура",
+        assertThat(1).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
                 new Genre(1L,""))));
         assertThat(dao.getById(dao.countAll()).getName()).isEqualTo("Чистая архитектура");
@@ -105,7 +105,7 @@ class BookDaoJdbcTest{
 
         Author author = new Author(3L,"Роберт Мартин",new ArrayList<>());
         Genre genre = new Genre(1L,"Программирование");
-        Book expected2 = new Book(3,"Идевльный программист",author,genre);
+        Book expected2 = new Book(3L,"Идевльный программист",author,genre);
         List<Book> expected = Lists.newArrayList(CLEAN_CODE,expected2);
         expected.sort(Comparator.comparing(Book::getId));
         actual.sort(Comparator.comparing(Book::getId));
