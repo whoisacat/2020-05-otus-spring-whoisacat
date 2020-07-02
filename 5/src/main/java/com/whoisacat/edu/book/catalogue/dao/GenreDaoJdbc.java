@@ -4,6 +4,9 @@ import com.whoisacat.edu.book.catalogue.domain.Genre;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -24,21 +27,19 @@ public class GenreDaoJdbc implements GenreDao{
     }
 
     @Override
-    public int count() {
+    public long count() {
         return jdbc.getJdbcOperations().queryForObject("select count(*) from genre",Integer.class);
     }
 
     @Override
-    public int insert(Genre genre) {
+    public Long insert(Genre genre) {
         if(!getByName(genre.getName()).isEmpty()){
-            return 0;
+            return null;
         }
-        Map<String, Object> params = Map.of("id",getNewId(),"name", genre.getName());
-        return jdbc.update("insert into genre (id, \"name\") values (:id, :name)", params);
-    }
-
-    private long getNewId(){
-        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from genre",Integer.class);
+        SqlParameterSource params = new MapSqlParameterSource(Map.of("name",genre.getName()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update("insert into genre (ID, \"name\") values (genre_seq.NEXTVAL, :name)", params, keyHolder, new String[]{"ID"});
+        return keyHolder.getKey().longValue();
     }
 
     @Override

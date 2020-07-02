@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AuthorDao{
 
-    int count();
+    long count();
 
-    void insert(Author author);
+    Long insert(Author author);
 
     Author getById(long id);
 

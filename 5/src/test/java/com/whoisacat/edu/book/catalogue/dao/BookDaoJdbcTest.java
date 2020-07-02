@@ -36,37 +36,36 @@ class BookDaoJdbcTest{
     @DisplayName("Правильно насчитать шесть книг")
     @Test
     void count(){
-        assertThat(6).isEqualTo(dao.countAll());
+        assertThat(6).isEqualTo(dao.count());
     }
 
     @DisplayName("Вставить книгу")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insert(){
-        dao.insert(new Book(null,"Чистая архитектура",
+        assertThat(dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
-                new Genre(1L,"")));
-        assertThat(7).isEqualTo(dao.countAll());
+                new Genre(1L,"")))).isEqualTo(dao.count());
     }
 
     @DisplayName("Вставить книгу с правильным автором")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectAuthorName(){
-        assertThat(1).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
+        assertThat(7L).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
                 new Genre(1L,""))));
-        assertThat(dao.getById(dao.countAll()).getAuthor().getName()).isEqualTo("Роберт Мартин");
+        assertThat(dao.getById(dao.count()).getAuthor().getName()).isEqualTo("Роберт Мартин");
     }
 
     @DisplayName("Вставить книгу с правильным названием")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectName(){
-        assertThat(1).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
+        assertThat(7L).isEqualTo(dao.insert(new Book(null,"Чистая архитектура",
                 new Author(3L,"",new ArrayList<>()),
                 new Genre(1L,""))));
-        assertThat(dao.getById(dao.countAll()).getName()).isEqualTo("Чистая архитектура");
+        assertThat(dao.getById(dao.count()).getName()).isEqualTo("Чистая архитектура");
     }
 
     @DisplayName("Найти книгу по идентефикатору")
@@ -134,9 +133,9 @@ class BookDaoJdbcTest{
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteById(){
-        int count = dao.countAll();
+        long count = dao.count();
         dao.deleteById(1);
-        assertThat(count - 1).isEqualTo(dao.countAll());
+        assertThat(count - 1).isEqualTo(dao.count());
         assertThat(dao.getById(1)).isNull();
     }
 
@@ -144,9 +143,9 @@ class BookDaoJdbcTest{
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteByName(){
-        int count = dao.countAll();
+        long count = dao.count();
         dao.deleteByName("Исскуство войны");
-        assertThat(count - 1).isEqualTo(dao.countAll());
+        assertThat(count - 1).isEqualTo(dao.count());
         assertThat(dao.getById(1)).isNull();
     }
 

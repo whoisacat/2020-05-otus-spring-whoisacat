@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AuthorServiceJDBC implements AuthorService, NamedService<Author>{
+public class AuthorServiceSimple implements AuthorService, NamedService<Author>{
 
     public static final String NOT_FOUND = "Не найден";
     private final AuthorDao dao;
 
-    public AuthorServiceJDBC(AuthorDao dao){
+    public AuthorServiceSimple(AuthorDao dao){
         this.dao = dao;
     }
 

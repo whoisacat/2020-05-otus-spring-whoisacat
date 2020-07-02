@@ -22,14 +22,14 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с жанрами должен")
 @JdbcTest
 @ExtendWith(SpringExtension.class)
-@Import(GenreServiceJDBC.class)
+@Import(GenreServiceSimple.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class GenreServiceJDBCTest{
+class GenreServiceSimpleTest{
 
     private static final Genre GENRE_ODIN = new Genre(1L,"godin");
     private static final Genre GENRE_SECONDO = new Genre(2L,"second one");
 
-    @Autowired GenreServiceJDBC service;
+    @Autowired GenreServiceSimple service;
 
     @MockBean GenreDaoJdbc dao;
 
@@ -50,7 +50,7 @@ class GenreServiceJDBCTest{
     @DisplayName(value = "Передать количество от дао")
     @Test
     void getGenresCount(){
-        when(dao.count()).thenReturn(42);
+        when(dao.count()).thenReturn(42L);
         assertThat(service.getGenresCount()).isEqualTo(42);
     }
 

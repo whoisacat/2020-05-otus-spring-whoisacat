@@ -1,6 +1,7 @@
 package com.whoisacat.edu.book.catalogue.shell;
 
 import com.whoisacat.edu.book.catalogue.domain.Author;
+import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
 import com.whoisacat.edu.book.catalogue.service.AuthorService;
 import com.whoisacat.edu.book.catalogue.service.BookService;
@@ -11,9 +12,12 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
+import java.util.List;
+
 @ShellComponent
 public class ApplicationEventsCommands{
 
+    public static final String BOOK_ADDED_SUCCESSFULLY = "Успешно добавлена книга ";
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
@@ -119,10 +123,11 @@ public class ApplicationEventsCommands{
     @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
     public String addBook(String book,String author, String genre) {
         try{
-            String result = bookService.addBook(book,author,genre);
-            return !result.isEmpty() ? "Успешно добавлена книга " + result : "Книга не была добавлена";
-        } catch(WHORequestClientException e){
-            return e.getLocalizedMessage();
+            List<Book> books = bookService.addBook(book,author,genre);
+            if(books.size() == 1){
+                return BOOK_ADDED_SUCCESSFULLY.concat(bookService.buildBooksString(books));
+            }
+            return "Такая книга уже есть, найдены книги - ".concat(bookService.buildBooksString(books));
         } catch(Exception e){
             e.printStackTrace();
             return e.getMessage();

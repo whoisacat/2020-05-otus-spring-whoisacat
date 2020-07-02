@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GenreServiceJDBC implements GenreService,NamedService<Genre>{
+public class GenreServiceSimple implements GenreService,NamedService<Genre>{
 
     private final GenreDao dao;
 
-    public GenreServiceJDBC(GenreDao dao){
+    public GenreServiceSimple(GenreDao dao){
         this.dao = dao;
     }
 

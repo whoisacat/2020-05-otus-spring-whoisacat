@@ -6,6 +6,9 @@ import com.whoisacat.edu.book.catalogue.domain.Genre;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -27,22 +30,20 @@ public class BookDaoJdbc implements BookDao{
     }
 
     @Override
-    public int countAll() {
+    public long count() {
         return jdbc.getJdbcOperations().queryForObject("select count(*) from book",Integer.class);
     }
 
     @Override
-    public int insert(Book book) {
-        Map<String, Object> params = Map.of("id",getNewId(),
-                "name", book.getName(),
+    public Long insert(Book book) {
+        SqlParameterSource params = new MapSqlParameterSource(Map.of(
+                "name",book.getName(),
                 "author_id",book.getAuthor().getId(),
-                "genre_id",book.getGenre().getId());
-        return jdbc.update("insert into book (id, \"name\",author_id,genre_id) " +
-                "values (:id, :name,:author_id,:genre_id)", params);
-    }
-
-    private long getNewId(){
-        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from book",Integer.class);
+                "genre_id",book.getGenre().getId()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update("insert into book (ID, \"name\",author_id,genre_id) " +
+                "values (book_seq.NEXTVAL, :name,:author_id,:genre_id)", params, keyHolder, new String[]{"ID"});
+        return keyHolder.getKey().longValue();
     }
 
     @Override

@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -20,23 +23,22 @@ public class AuthorDaoJdbc implements AuthorDao{
 
     private final NamedParameterJdbcOperations jdbc;
 
+
     public AuthorDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations){
         this.jdbc = namedParameterJdbcOperations;
     }
 
     @Override
-    public int count() {
+    public long count() {
         return jdbc.getJdbcOperations().queryForObject("select count(*) from author",Integer.class);
     }
 
     @Override
-    public void insert(Author author) {
-        Map<String, Object> params = Map.of("id",getNewId(),"name", author.getName());
-        jdbc.update("insert into author (id, \"name\") values (:id, :name)", params);
-    }
-
-    private long getNewId(){
-        return jdbc.getJdbcOperations().queryForObject("select max(id) + 1 from author",Integer.class);
+    public Long insert(Author author) {
+        SqlParameterSource params = new MapSqlParameterSource(Map.of("name",author.getName()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update("insert into author (ID, \"name\") values (author_seq.NEXTVAL, :name)", params, keyHolder, new String[]{"ID"});
+        return keyHolder.getKey().longValue();
     }
 
     @Override

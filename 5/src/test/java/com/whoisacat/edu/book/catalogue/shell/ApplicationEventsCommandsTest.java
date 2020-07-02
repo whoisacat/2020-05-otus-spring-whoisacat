@@ -1,10 +1,11 @@
 package com.whoisacat.edu.book.catalogue.shell;
 
+import com.google.common.collect.Lists;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
-import com.whoisacat.edu.book.catalogue.service.AuthorServiceJDBC;
-import com.whoisacat.edu.book.catalogue.service.BookServiceJDBC;
+import com.whoisacat.edu.book.catalogue.service.AuthorServiceSimple;
+import com.whoisacat.edu.book.catalogue.service.BookServiceSimple;
 import com.whoisacat.edu.book.catalogue.service.GenreService;
 import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
 import org.junit.jupiter.api.DisplayName;
@@ -18,9 +19,11 @@ import org.springframework.shell.jline.ScriptShellApplicationRunner;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static com.whoisacat.edu.book.catalogue.shell.ApplicationEventsCommands.BOOK_ADDED_SUCCESSFULLY;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName(value = "Тест команд  shell должен")
@@ -44,9 +47,9 @@ class ApplicationEventsCommandsTest{
     public static final Book BOOK = new Book((1L),TRUE_LA_LA,AUTHOR,GENRE);
 
     @Autowired Shell shell;
-    @MockBean AuthorServiceJDBC authorService;
+    @MockBean AuthorServiceSimple authorService;
     @MockBean GenreService genreService;
-    @MockBean BookServiceJDBC bookService;
+    @MockBean BookServiceSimple bookService;
 
     @DisplayName(value = "Должен отобразить приветствие после логина")
     @Test
@@ -143,8 +146,10 @@ class ApplicationEventsCommandsTest{
     @Test
     void addBook(){
         shell.evaluate(() -> LOGIN);
-        when(bookService.addBook(TRUE_LA_LA,TRUE_LA_LA,TRUE_LA_LA)).thenReturn(TRUE_LA_LA);
-        assertThat(shell.evaluate(() -> "ab " + TRUE_LA_LA + " " + TRUE_LA_LA + " " + TRUE_LA_LA)).isEqualTo("Успешно добавлена книга true-la-la");
+        when(bookService.addBook(TRUE_LA_LA,TRUE_LA_LA,TRUE_LA_LA)).thenReturn(Lists.newArrayList(BOOK));
+        when(bookService.buildBooksString(any(List.class))).thenReturn("BOOK");
+        assertThat(shell.evaluate(() -> "ab " + TRUE_LA_LA + " " + TRUE_LA_LA + " " + TRUE_LA_LA))
+                .isEqualTo(BOOK_ADDED_SUCCESSFULLY.concat("BOOK"));
     }
 
     @Test

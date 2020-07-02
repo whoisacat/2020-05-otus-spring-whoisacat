@@ -40,7 +40,7 @@ class AuthorDaoJdbcTest{
     @Test
     void insertAuthorsTest(){
         assertThat(6).isEqualTo(dao.count());
-        dao.insert(new Author(null,"some new author",new ArrayList<>()));
+        assertThat(dao.insert(new Author(null,"some new author",new ArrayList<>()))).isEqualTo(7);
         assertThat(dao.count()).isEqualTo(7);
     }
 

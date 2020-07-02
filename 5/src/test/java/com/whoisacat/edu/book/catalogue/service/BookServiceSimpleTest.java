@@ -22,14 +22,15 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Сервис для работы с книгами должен")
 @JdbcTest
 @ExtendWith(SpringExtension.class)
-@Import(BookServiceJDBC.class)
+@Import(BookServiceSimple.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class BookServiceJDBCTest{
+class BookServiceSimpleTest{
 
     private static final Author AUTHOR_ODIN = new Author(1L,"odin",new ArrayList<>());
     private static final Genre GENRE_OGIN = new Genre(1L,"ogin");
@@ -38,7 +39,7 @@ class BookServiceJDBCTest{
     private static final String AUTHOR_STRING = "authorString";
 
     @Autowired
-    private BookServiceJDBC service;
+    private BookServiceSimple service;
 
     @MockBean private BookDaoJdbc dao;
     @MockBean private AuthorService authorService;
@@ -51,19 +52,34 @@ class BookServiceJDBCTest{
         assertThat(service.findAll()).isEqualTo(Lists.newArrayList(BOOK_ODIN));
     }
 
-    @DisplayName(value = "Должен выбросить исключение если есть уже книги")
+    @DisplayName(value = "Должен выбросить исключение если книга не добавилась")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
-    void dontAddBookWhenBookLikeThisAlreadyExists(){
+    void throwExceptionWhenDaoGivesNull(){
+        when(authorService.findByNameOrCreate(AUTHOR_STRING))
+                .thenReturn(AUTHOR_ODIN);
+        when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
+        when(dao.findByNameAndAuthorIdAndGenreId(BOOK_ODIN.getName(),AUTHOR_ODIN.getId(),GENRE_OGIN.getId()))
+                .thenReturn(Lists.newArrayList());
+        when(dao.insert(any(Book.class))).thenReturn(null);
+        assertThrows(WHORequestClientException.class,
+                ()->service.addBook(BOOK_ODIN.getName(),AUTHOR_STRING,GENRE_STRING));
+    }
+
+    @DisplayName(value = "Должен вернуть книги, если они уже есть")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    @Test
+    void returnFoundedBookWhenIsFounded(){
         when(authorService.findByNameOrCreate(AUTHOR_STRING))
                 .thenReturn(AUTHOR_ODIN);
         when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
         when(dao.findByNameAndAuthorIdAndGenreId("name",1,1))
                 .thenReturn(Lists.newArrayList(BOOK_ODIN));
-        assertThrows(WHORequestClientException.class,()->service.addBook("name",AUTHOR_STRING,GENRE_STRING));
+        assertThat(service.addBook("name",AUTHOR_STRING,GENRE_STRING))
+                .isEqualTo(Lists.newArrayList(BOOK_ODIN));
     }
 
-    @DisplayName(value = "Должен выбросить исключение если есть уже книги")
+    @DisplayName(value = "Должен вернуть книгу, если добавил")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void addBook(){
@@ -71,14 +87,17 @@ class BookServiceJDBCTest{
                 .thenReturn(AUTHOR_ODIN);
         when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
         when(dao.findByNameAndAuthorIdAndGenreId("name",1,1))
-                .thenReturn(Lists.newArrayList(BOOK_ODIN));
-        assertThrows(WHORequestClientException.class,()->service.addBook("name",AUTHOR_STRING,GENRE_STRING));
+                .thenReturn(Lists.newArrayList());
+        when(dao.insert(any(Book.class))).thenReturn(1L);
+        Book book = service.addBook(BOOK_ODIN.getName(),AUTHOR_STRING,GENRE_STRING).get(0);
+        assertThat(book.getName())
+                .isEqualTo(BOOK_ODIN.getName());
     }
 
     @DisplayName(value = "Должен передать что ему сказало дао")
     @Test
     void getBooksCount(){
-        when(dao.countAll()).thenReturn(5432);
+        when(dao.count()).thenReturn(5432L);
         assertThat(service.getBooksCount()).isEqualTo(5432);
     }
 

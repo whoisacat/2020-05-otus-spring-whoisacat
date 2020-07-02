@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с авторами должен")
 @JdbcTest
 @ExtendWith(SpringExtension.class)
-@Import(AuthorServiceJDBC.class)
+@Import(AuthorServiceSimple.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class AuthorServiceJDBCTest{
+class AuthorServiceSimpleTest{
 
     private static final Genre GENRE_1 = new Genre(1L,"1");
     private static final Author AUTHOR_1 = new Author(1L,"1",new ArrayList<>());
@@ -37,7 +37,7 @@ class AuthorServiceJDBCTest{
     private static final Author AUTHOR_2 = new Author(2L,"2",new ArrayList<>());
 
     @Autowired
-    private AuthorServiceJDBC service;
+    private AuthorServiceSimple service;
 
     @MockBean
     private AuthorDao dao;
@@ -63,14 +63,14 @@ class AuthorServiceJDBCTest{
 
     @Test
     void getAuthorsCount(){
-        when(dao.count()).thenReturn(707);
+        when(dao.count()).thenReturn(707L);
         assertThat(service.getAuthorsCount()).isEqualTo(707);
     }
 
     @Test
     void foundNoOneAuthorByName(){
         when(dao.getByName("name")).thenReturn(new ArrayList<>());
-        assertThat(service.findByName("name")).isEqualTo(AuthorServiceJDBC.NOT_FOUND);
+        assertThat(service.findByName("name")).isEqualTo(AuthorServiceSimple.NOT_FOUND);
     }
 
     @Test

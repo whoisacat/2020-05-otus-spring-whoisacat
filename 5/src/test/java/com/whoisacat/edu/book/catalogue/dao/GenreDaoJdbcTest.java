@@ -35,18 +35,17 @@ class GenreDaoJdbcTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertGenre(){
-        int count = dao.count();
         Genre genre = new Genre(null,"Новый жанр");
-        assertThat(dao.insert(genre)).isEqualTo(1);
-        assertThat(dao.count()).isEqualTo(count + 1);
+        assertThat(dao.insert(genre)).isEqualTo(4L);
+        assertThat(dao.count()).isEqualTo(4L);
     }
 
     @DisplayName("не вставить стырый жанр")
     @Test
     void dontInsertGenre(){
-        int count = dao.count();
+        long count = dao.count();
         Genre genre = new Genre(null,"Программирование");
-        assertThat(dao.insert(genre)).isEqualTo(0);
+        assertThat(dao.insert(genre)).isNull();
         assertThat(dao.count()).isEqualTo(count);
     }
 
@@ -82,7 +81,7 @@ class GenreDaoJdbcTest{
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void deleteGenreById(){
-        int count = dao.count();
+        long count = dao.count();
         dao.deleteById(3);
         assertThat(dao.count()).isEqualTo(count - 1);
     }

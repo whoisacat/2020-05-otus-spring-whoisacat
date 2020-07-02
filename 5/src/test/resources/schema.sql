@@ -1,17 +1,23 @@
 DROP TABLE IF EXISTS book;
 DROP TABLE IF EXISTS genre;
 DROP TABLE IF EXISTS author;
+DROP sequence IF EXISTS book_seq;
+DROP sequence IF EXISTS genre_seq;
+DROP sequence IF EXISTS author_seq;
 
+create sequence genre_seq;
 CREATE TABLE genre(
-	id BIGINT PRIMARY KEY,
+	id BIGINT NOT NULL DEFAULT genre_seq.nextval primary key,
 	"name" VARCHAR(255));
 
-CREATE TABLE author(
-	id BIGINT PRIMARY KEY,
+create sequence author_seq;
+CREATE TABLE public.author(
+	id BIGINT NOT NULL DEFAULT author_seq.nextval primary key,
 	"name" VARCHAR(255));
 
-CREATE TABLE book(
-	id BIGINT PRIMARY KEY,
+create sequence book_seq;
+CREATE TABLE public.book(
+	id BIGINT NOT NULL DEFAULT book_seq.nextval primary key,
 	"name" VARCHAR(255),
 	author_id BIGINT REFERENCES author(id),
 	genre_id BIGINT REFERENCES genre(id));
