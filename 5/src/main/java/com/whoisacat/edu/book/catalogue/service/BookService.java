@@ -4,11 +4,11 @@ import com.whoisacat.edu.book.catalogue.domain.Book;
 
 import java.util.List;
 
-public interface BookService{
+public interface BookService extends NamedService<Book>{
 
     List<Book> findAll();
 
-    List<Book> addBook(String book,String author,String genre);
+    Book addBook(String book,String author,String genre);
 
     long getBooksCount();
 

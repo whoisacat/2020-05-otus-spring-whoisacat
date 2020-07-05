@@ -1,11 +1,15 @@
 package com.whoisacat.edu.book.catalogue.shell;
 
+import com.google.common.collect.Lists;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
 import com.whoisacat.edu.book.catalogue.service.AuthorService;
 import com.whoisacat.edu.book.catalogue.service.BookService;
 import com.whoisacat.edu.book.catalogue.service.GenreService;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOAuthorAlreadyExists;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOBookAlreadyExists;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOGenreAlreadyExists;
 import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
@@ -121,16 +125,19 @@ public class ApplicationEventsCommands{
     @ShellMethod(value = "Добавить книгу. ВВедите название книги, автора, название жанра. " +
             "Для названий из двух и более слов использовать ковычки", key = {"ab", "add_book"})
     @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
-    public String addBook(String book,String author, String genre) {
+    public String addBook(String bookName,String author, String genre) {
         try{
-            List<Book> books = bookService.addBook(book,author,genre);
-            if(books.size() == 1){
-                return BOOK_ADDED_SUCCESSFULLY.concat(bookService.buildBooksString(books));
-            }
-            return "Такая книга уже есть, найдены книги - ".concat(bookService.buildBooksString(books));
-        } catch(Exception e){
-            e.printStackTrace();
-            return e.getMessage();
+            Book book = bookService.addBook(bookName,author,genre);
+            return BOOK_ADDED_SUCCESSFULLY.concat(bookService.buildBooksString(Lists.newArrayList(book)));
+        } catch(WHOAuthorAlreadyExists e){
+            return "Выберите автора точнее, были найдены - "
+                    .concat(authorService.findByName(author));
+        } catch(WHOGenreAlreadyExists e){
+            return "Выберите жанр точнее, были найдены - "
+                    .concat(genreService.findByName(author));
+        } catch(WHOBookAlreadyExists e){
+            return "Выберите название книги точнее, были найдены - "
+                    .concat(genreService.findByName(author));
         }
     }
 

@@ -5,7 +5,8 @@ import com.whoisacat.edu.book.catalogue.dao.BookDaoJdbc;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
-import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOBookAlreadyExists;
+import com.whoisacat.edu.book.catalogue.service.exception.WHODataAccessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,11 +63,11 @@ class BookServiceSimpleTest{
         when(dao.findByNameAndAuthorIdAndGenreId(BOOK_ODIN.getName(),AUTHOR_ODIN.getId(),GENRE_OGIN.getId()))
                 .thenReturn(Lists.newArrayList());
         when(dao.insert(any(Book.class))).thenReturn(null);
-        assertThrows(WHORequestClientException.class,
+        assertThrows(WHODataAccessException.class,
                 ()->service.addBook(BOOK_ODIN.getName(),AUTHOR_STRING,GENRE_STRING));
     }
 
-    @DisplayName(value = "Должен вернуть книги, если они уже есть")
+    @DisplayName(value = "Должен Выбросить исключение когда книги уже есть")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void returnFoundedBookWhenIsFounded(){
@@ -75,8 +76,7 @@ class BookServiceSimpleTest{
         when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
         when(dao.findByNameAndAuthorIdAndGenreId("name",1,1))
                 .thenReturn(Lists.newArrayList(BOOK_ODIN));
-        assertThat(service.addBook("name",AUTHOR_STRING,GENRE_STRING))
-                .isEqualTo(Lists.newArrayList(BOOK_ODIN));
+        assertThrows(WHOBookAlreadyExists.class,()->service.addBook("name",AUTHOR_STRING,GENRE_STRING));
     }
 
     @DisplayName(value = "Должен вернуть книгу, если добавил")
@@ -89,7 +89,8 @@ class BookServiceSimpleTest{
         when(dao.findByNameAndAuthorIdAndGenreId("name",1,1))
                 .thenReturn(Lists.newArrayList());
         when(dao.insert(any(Book.class))).thenReturn(1L);
-        Book book = service.addBook(BOOK_ODIN.getName(),AUTHOR_STRING,GENRE_STRING).get(0);
+        when(dao.getById(1L)).thenReturn(BOOK_ODIN);
+        Book book = service.addBook(BOOK_ODIN.getName(),AUTHOR_STRING,GENRE_STRING);
         assertThat(book.getName())
                 .isEqualTo(BOOK_ODIN.getName());
     }

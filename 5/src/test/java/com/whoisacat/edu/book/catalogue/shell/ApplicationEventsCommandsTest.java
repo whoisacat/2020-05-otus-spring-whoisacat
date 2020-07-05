@@ -146,7 +146,7 @@ class ApplicationEventsCommandsTest{
     @Test
     void addBook(){
         shell.evaluate(() -> LOGIN);
-        when(bookService.addBook(TRUE_LA_LA,TRUE_LA_LA,TRUE_LA_LA)).thenReturn(Lists.newArrayList(BOOK));
+        when(bookService.addBook(TRUE_LA_LA,TRUE_LA_LA,TRUE_LA_LA)).thenReturn(BOOK);
         when(bookService.buildBooksString(any(List.class))).thenReturn("BOOK");
         assertThat(shell.evaluate(() -> "ab " + TRUE_LA_LA + " " + TRUE_LA_LA + " " + TRUE_LA_LA))
                 .isEqualTo(BOOK_ADDED_SUCCESSFULLY.concat("BOOK"));

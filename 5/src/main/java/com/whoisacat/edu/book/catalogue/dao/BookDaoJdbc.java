@@ -3,6 +3,7 @@ package com.whoisacat.edu.book.catalogue.dao;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -41,27 +42,25 @@ public class BookDaoJdbc implements BookDao{
                 "author_id",book.getAuthor().getId(),
                 "genre_id",book.getGenre().getId()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("insert into book (ID, \"name\",author_id,genre_id) " +
-                "values (book_seq.NEXTVAL, :name,:author_id,:genre_id)", params, keyHolder, new String[]{"ID"});
+        jdbc.update("insert into book (\"name\",author_id,genre_id) " +
+                "values (:name,:author_id,:genre_id)", params, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
     @Override
     public Book getById(long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        Book book = null;
         try{
-
-            book = jdbc.queryForObject(
+            return jdbc.queryForObject(
                     "select bk.id as bkid,bk.\"name\" as bkname, " +
                             "au.id as auid,au.\"name\" as auname, " +
                             "gr.id as grid,gr.\"name\" as grname " +
                             "from book bk " +
                             "left join author au on bk.author_id = au.id " +
                             "left join genre gr on bk.genre_id = gr.id " +
-                            "where bk.id = :id;", params, new BookMapper());
-        }finally{
-            return book;
+                            "where bk.id = :id;",params,new BookMapper());
+        } catch(EmptyResultDataAccessException e){
+            return null;
         }
     }
 

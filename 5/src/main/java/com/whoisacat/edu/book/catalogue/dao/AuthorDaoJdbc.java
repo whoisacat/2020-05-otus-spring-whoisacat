@@ -37,7 +37,7 @@ public class AuthorDaoJdbc implements AuthorDao{
     public Long insert(Author author) {
         SqlParameterSource params = new MapSqlParameterSource(Map.of("name",author.getName()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("insert into author (ID, \"name\") values (author_seq.NEXTVAL, :name)", params, keyHolder, new String[]{"ID"});
+        jdbc.update("insert into author (\"name\") values (:name)", params, keyHolder);
         return keyHolder.getKey().longValue();
     }
 

@@ -1,11 +1,11 @@
 package com.whoisacat.edu.book.catalogue.service;
 
-import com.google.common.collect.Lists;
 import com.whoisacat.edu.book.catalogue.dao.BookDao;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
-import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOBookAlreadyExists;
+import com.whoisacat.edu.book.catalogue.service.exception.WHODataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,19 +28,18 @@ public class BookServiceSimple implements BookService{
         return dao.getAll();
     }
 
-    @Override public List<Book> addBook(String bookString,String authorString,String genreString){
+    @Override public Book addBook(String bookString,String authorString,String genreString){
         Author author = authorService.findByNameOrCreate(authorString);
         Genre genre = genreService.findByNameOrCreate(genreString);
         List<Book> existedBooks = dao.findByNameAndAuthorIdAndGenreId(bookString,author.getId(),genre.getId());
         if(!existedBooks.isEmpty()){
-            return existedBooks;
+            throw new WHOBookAlreadyExists();
         }
-        Book book = new Book(null,bookString,author,genre);
-        if(dao.insert(book) != null){
-            return Lists.newArrayList(book);
-        }else{
-            throw new WHORequestClientException("Книга не добавлена");
+        Long id = dao.insert(new Book(null,bookString,author,genre));
+        if(id == null){
+            throw new WHODataAccessException("bookDaoInsertHasReturnedNull");
         }
+        return dao.getById(id);
     }
 
     @Override public long getBooksCount(){

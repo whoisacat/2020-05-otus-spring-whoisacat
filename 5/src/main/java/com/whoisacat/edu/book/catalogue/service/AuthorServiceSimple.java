@@ -3,14 +3,14 @@ package com.whoisacat.edu.book.catalogue.service;
 import com.whoisacat.edu.book.catalogue.dao.AuthorDao;
 import com.whoisacat.edu.book.catalogue.domain.Author;
 import com.whoisacat.edu.book.catalogue.domain.Book;
-import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOAuthorAlreadyExists;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AuthorServiceSimple implements AuthorService, NamedService<Author>{
+public class AuthorServiceSimple implements AuthorService{
 
     public static final String NOT_FOUND = "Не найден";
     private final AuthorDao dao;
@@ -39,12 +39,11 @@ public class AuthorServiceSimple implements AuthorService, NamedService<Author>{
             return authors.get(0);
         }
         if(authors.size() > 1){
-            throw new WHORequestClientException("Выберите автора точнее, были найдены - "
-                    .concat(buildNames(authors)));
+            throw new WHOAuthorAlreadyExists();
         }
         Author author = new Author(null,authorString,new ArrayList<>());
-        dao.insert(author);
-        return findByNameOrCreate(authorString);
+        Long authorId = dao.insert(author);
+        return dao.getById(authorId);
     }
 
     @Override public long getAuthorsCount(){

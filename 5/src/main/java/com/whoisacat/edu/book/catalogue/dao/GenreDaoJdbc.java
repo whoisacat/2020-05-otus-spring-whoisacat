@@ -38,7 +38,7 @@ public class GenreDaoJdbc implements GenreDao{
         }
         SqlParameterSource params = new MapSqlParameterSource(Map.of("name",genre.getName()));
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update("insert into genre (ID, \"name\") values (genre_seq.NEXTVAL, :name)", params, keyHolder, new String[]{"ID"});
+        jdbc.update("insert into genre (\"name\") values (:name)", params, keyHolder);
         return keyHolder.getKey().longValue();
     }
 

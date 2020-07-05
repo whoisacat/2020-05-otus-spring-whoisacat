@@ -2,13 +2,13 @@ package com.whoisacat.edu.book.catalogue.service;
 
 import com.whoisacat.edu.book.catalogue.dao.GenreDao;
 import com.whoisacat.edu.book.catalogue.domain.Genre;
-import com.whoisacat.edu.book.catalogue.service.exception.WHORequestClientException;
+import com.whoisacat.edu.book.catalogue.service.exception.WHOGenreAlreadyExists;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GenreServiceSimple implements GenreService,NamedService<Genre>{
+public class GenreServiceSimple implements GenreService{
 
     private final GenreDao dao;
 
@@ -22,8 +22,7 @@ public class GenreServiceSimple implements GenreService,NamedService<Genre>{
             return genres.get(0);
         }
         if(genres.size() > 1){
-            throw new WHORequestClientException("Выберите жанр точнее, были найдены - "
-                    .concat(buildNames(genres)));
+            throw new WHOGenreAlreadyExists();
         }
         Genre author = new Genre(null,authorString);
         dao.insert(author);
