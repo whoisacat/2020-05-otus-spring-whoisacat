@@ -25,8 +25,8 @@ public class GenreServiceSimple implements GenreService{
             throw new WHOGenreAlreadyExists();
         }
         Genre author = new Genre(null,authorString);
-        dao.insert(author);
-        return findByNameOrCreate(authorString);
+        long id = dao.insert(author);
+        return dao.getById(id);
     }
 
     @Override public long getGenresCount(){
