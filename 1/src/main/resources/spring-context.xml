@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="questionDao" class="com.whoisacat.edu.testingApp1.dao.QuestionDaoCsv">
+        <constructor-arg value="questions.csv"/>
+    </bean>
+    <bean id="reader" class="com.whoisacat.edu.testingApp1.service.QuestionReaderServiceImpl">
+        <constructor-arg name="dao" ref="questionDao"/>
+    </bean>
+    <bean id="writer" class="com.whoisacat.edu.testingApp1.service.QuestionWriterServiceImpl">
+        <constructor-arg name="reader" ref="reader"/>
+        <constructor-arg name="printStream">
+            <null/>
+        </constructor-arg>
+    </bean>
+</beans>
