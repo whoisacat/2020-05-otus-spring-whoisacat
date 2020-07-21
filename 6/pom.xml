@@ -11,7 +11,7 @@
 	<groupId>com.whoisacat</groupId>
 	<artifactId>book-catalogue-jpa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>book-catalogue</name>
+	<name>book-catalogue-jpa</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
@@ -35,7 +35,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

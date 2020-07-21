@@ -1,14 +1,32 @@
 package com.whoisacat.edu.book.jpa.catalogue.domain;
 
-public class Book implements Named{
-    private final Long id;
-    private final String name;
-    private final Author author;
-    private final Genre genre;
+import javax.persistence.*;
 
-    public Book(Long id,String name,Author author,Genre genre){
+@Entity
+@Table(name = "book")
+public class Book implements Titled{
+
+    @Id
+    @SequenceGenerator(name="book_seq", sequenceName = "book_seq",allocationSize = 1)
+    @GeneratedValue(generator="book_seq")
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "title")
+    private String title;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Author author;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Genre genre;
+
+    public Book(){
+    }
+
+    public Book(Long id,String title,Author author,Genre genre){
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.author = author;
         this.genre = genre;
     }
@@ -17,8 +35,8 @@ public class Book implements Named{
         return id;
     }
 
-    public String getName(){
-        return name;
+    public String getTitle(){
+        return title;
     }
 
     public Author getAuthor(){

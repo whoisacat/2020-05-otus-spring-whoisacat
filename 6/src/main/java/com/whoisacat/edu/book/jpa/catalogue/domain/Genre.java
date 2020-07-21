@@ -1,19 +1,32 @@
 package com.whoisacat.edu.book.jpa.catalogue.domain;
 
-public class Genre implements Named{
-    private final Long id;
-    private final String name;
+import javax.persistence.*;
 
-    public Genre(Long id,String name){
-        this.id = id;
-        this.name = name;
+@Entity
+@Table(name = "genre")
+public class Genre implements Titled{
+
+    @Id
+    @SequenceGenerator(name="genre_seq", sequenceName = "genre_seq",allocationSize = 1)
+    @GeneratedValue(generator="genre_seq")
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "title")
+    private String title;
+
+    public Genre(){
     }
 
-    public long getId(){
+    public Genre(Long id,String title){
+        this.id = id;
+        this.title = title;
+    }
+
+    public Long getId(){
         return id;
     }
 
-    public String getName(){
-        return name;
+    public String getTitle(){
+        return title;
     }
 }

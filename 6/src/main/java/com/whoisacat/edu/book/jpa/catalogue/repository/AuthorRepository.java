@@ -1,14 +1,14 @@
-package com.whoisacat.edu.book.jpa.catalogue.dao;
+package com.whoisacat.edu.book.jpa.catalogue.repository;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Author;
 
 import java.util.List;
 
-public interface AuthorDao{
+public interface AuthorRepository{
 
-    long count();
+    Long count();
 
-    Long insert(Author author);
+    Author save(Author author);
 
     Author getById(long id);
 
@@ -16,5 +16,5 @@ public interface AuthorDao{
 
     List<Author> getAll();
 
-    void deleteById(long id);
+    int deleteById(long id);
 }

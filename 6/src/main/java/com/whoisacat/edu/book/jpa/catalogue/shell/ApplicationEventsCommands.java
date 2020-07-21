@@ -78,7 +78,7 @@ public class ApplicationEventsCommands{
     public String addAuthor(String name) {
         try{
             Author author = authorService.findByNameOrCreate(name);
-            return author != null ? "Успешно добавлен автор " + author.getName() : "Автор не был добавлен";
+            return author != null ? "Успешно добавлен автор " + author.getTitle() : "Автор не был добавлен";
         } catch(WHORequestClientException e){
             return e.getLocalizedMessage();
         } catch(Exception e){
@@ -111,7 +111,7 @@ public class ApplicationEventsCommands{
     public String addGenre(String name) {
         try{
             Genre genre = genreService.findByNameOrCreate(name);
-            return genre != null ? "Успешно добавлен жанр " + genre.getName() : "Жанр не был добавлен";
+            return genre != null ? "Успешно добавлен жанр " + genre.getTitle() : "Жанр не был добавлен";
         } catch(WHORequestClientException e){
             return e.getLocalizedMessage();
         } catch(Exception e){
@@ -143,5 +143,11 @@ public class ApplicationEventsCommands{
     @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
     public long countBooks(){
         return bookService.getBooksCount();
+    }
+
+    @ShellMethod(value = "Вывести общее количество книг", key = {"pb","print_books"})
+    @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
+    public String printBooks(){
+        return bookService.getAllBooksString();
     }
 }

@@ -2,7 +2,7 @@ package com.whoisacat.edu.book.jpa.catalogue.service;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Author;
 
-public interface AuthorService extends NamedService<Author>{
+public interface AuthorService extends TitledService<Author>{
 
     String getAllAuthorsString();
 

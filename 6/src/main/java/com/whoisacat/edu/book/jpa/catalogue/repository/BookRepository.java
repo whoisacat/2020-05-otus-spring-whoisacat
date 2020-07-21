@@ -1,14 +1,14 @@
-package com.whoisacat.edu.book.jpa.catalogue.dao;
+package com.whoisacat.edu.book.jpa.catalogue.repository;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
 
 import java.util.List;
 
-public interface BookDao{
+public interface BookRepository{
 
     long count();
 
-    Long insert(Book book);
+    Book save(Book book);
 
     Book getById(long id);
 
@@ -18,9 +18,9 @@ public interface BookDao{
 
     List<Book> getAll();
 
-    void deleteById(long id);
+    int deleteById(long id);
 
-    void deleteByName(String name);
+    int deleteByName(String name);
 
     List<Book> findByNameAndAuthorIdAndGenreId(String bookString,long authorId,long genreId);
 }

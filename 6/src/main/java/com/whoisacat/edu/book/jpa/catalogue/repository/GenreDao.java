@@ -1,4 +1,4 @@
-package com.whoisacat.edu.book.jpa.catalogue.dao;
+package com.whoisacat.edu.book.jpa.catalogue.repository;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Genre;
 
@@ -8,7 +8,7 @@ public interface GenreDao{
 
     long count();
 
-    Long insert(Genre genre);
+    Genre save(Genre genre);
 
     Genre getById(long id);
 
@@ -16,5 +16,5 @@ public interface GenreDao{
 
     List<Genre> getAll();
 
-    void deleteById(long id);
+    int deleteById(long id);
 }

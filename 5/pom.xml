@@ -11,7 +11,7 @@
 	<groupId>com.whoisacat</groupId>
 	<artifactId>book-catalogue</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>book-catalogue</name>
+	<name>book-catalogue-jdbc</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

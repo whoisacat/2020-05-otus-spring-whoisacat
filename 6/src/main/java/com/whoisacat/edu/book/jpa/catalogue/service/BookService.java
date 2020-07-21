@@ -4,7 +4,7 @@ import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
 
 import java.util.List;
 
-public interface BookService extends NamedService<Book>{
+public interface BookService extends TitledService<Book>{
 
     List<Book> findAll();
 
@@ -15,4 +15,6 @@ public interface BookService extends NamedService<Book>{
     List<Book> findByAuthorId(long id);
 
     String buildBooksString(List<Book> existedBooks);
+
+    String getAllBooksString();
 }

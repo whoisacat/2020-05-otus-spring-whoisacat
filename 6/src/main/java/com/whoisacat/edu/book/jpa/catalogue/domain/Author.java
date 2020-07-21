@@ -1,30 +1,33 @@
 package com.whoisacat.edu.book.jpa.catalogue.domain;
 
-import java.util.HashSet;
+import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
-public class Author implements Named{
+@Entity
+@Table(name = "author")
+public class Author implements Titled{
 
-    private final Long id;
-    private final String name;
-    private final Set<Book> books = new HashSet<>();
+    @Id
+    @SequenceGenerator(name="author_seq", sequenceName = "author_seq",allocationSize = 1)
+    @GeneratedValue(generator="author_seq")
+    @Column(name = "id")
+    private Long id;
 
-    public Author(Long id,String name,List<Book> books){
+    @Column(name = "title")
+    private String title;
+
+    public Author(Long id,String title){
         this.id = id;
-        this.name = name;
-        this.books.addAll(books);
+        this.title = title;
     }
 
-    public long getId(){
+    public Author(){
+    }
+    public Long getId(){
         return id;
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public Set<Book> getBooks(){
-        return books;
+    public String getTitle(){
+        return title;
     }
 }

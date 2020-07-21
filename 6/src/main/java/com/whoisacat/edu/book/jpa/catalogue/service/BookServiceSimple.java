@@ -1,66 +1,74 @@
 package com.whoisacat.edu.book.jpa.catalogue.service;
 
-import com.whoisacat.edu.book.jpa.catalogue.dao.BookDao;
+import com.whoisacat.edu.book.jpa.catalogue.repository.BookRepository;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Author;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Genre;
 import com.whoisacat.edu.book.jpa.catalogue.service.exception.WHOBookAlreadyExists;
 import com.whoisacat.edu.book.jpa.catalogue.service.exception.WHODataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class BookServiceSimple implements BookService{
 
-    private final BookDao dao;
+    private final BookRepository repository;
     private final AuthorService authorService;
     private final GenreService genreService;
 
-    public BookServiceSimple(BookDao dao,AuthorService authorService,
+    public BookServiceSimple(BookRepository repository,AuthorService authorService,
                              GenreService genreService){
-        this.dao = dao;
+        this.repository = repository;
         this.authorService = authorService;
         this.genreService = genreService;
     }
 
     @Override public List<Book> findAll(){
-        return dao.getAll();
+        return repository.getAll();
     }
 
+    @Transactional
     @Override public Book addBook(String bookString,String authorString,String genreString){
         Author author = authorService.findByNameOrCreate(authorString);
         Genre genre = genreService.findByNameOrCreate(genreString);
-        List<Book> existedBooks = dao.findByNameAndAuthorIdAndGenreId(bookString,author.getId(),genre.getId());
+        List<Book> existedBooks = repository.findByNameAndAuthorIdAndGenreId(bookString,author.getId(),genre.getId());
         if(!existedBooks.isEmpty()){
             throw new WHOBookAlreadyExists();
         }
-        Long id = dao.insert(new Book(null,bookString,author,genre));
-        if(id == null){
+        Book book = repository.save(new Book(null,bookString,author,genre));
+        if(book == null){
             throw new WHODataAccessException("bookDaoInsertHasReturnedNull");
         }
-        return dao.getById(id);
+        return book;
     }
 
     @Override public long getBooksCount(){
-        return dao.count();
+        return repository.count();
     }
 
+    @Transactional(readOnly = true)
     @Override public List<Book> findByAuthorId(long id){
-        return dao.getByAuthor(id);
+        return repository.getByAuthor(id);
     }
 
     @Override
     public String buildBooksString(List<Book> existedBooks){
         StringBuilder sb = new StringBuilder();
         for(Book book : existedBooks){
-            sb.append(book.getName())
+            sb.append(book.getTitle())
                     .append(" ")
-                    .append(book.getAuthor().getName())
+                    .append(book.getAuthor().getTitle())
                     .append(" ")
-                    .append(book.getGenre().getName())
+                    .append(book.getGenre().getTitle())
                     .append("; ");
         }
         return sb.toString();
+    }
+
+    @Transactional(readOnly = true)
+    @Override public String getAllBooksString(){
+        return buildBooksString(findAll());
     }
 }

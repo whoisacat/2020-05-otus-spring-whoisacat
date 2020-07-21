@@ -1,7 +1,7 @@
 package com.whoisacat.edu.book.jpa.catalogue.service;
 
 import com.google.common.collect.Lists;
-import com.whoisacat.edu.book.jpa.catalogue.dao.GenreDaoJdbc;
+import com.whoisacat.edu.book.jpa.catalogue.repository.GenreRepositoryImpl;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Genre;
 import com.whoisacat.edu.book.jpa.catalogue.service.exception.WHORequestClientException;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class GenreServiceSimpleTest{
 
     @Autowired GenreServiceSimple service;
 
-    @MockBean GenreDaoJdbc dao;
+    @MockBean GenreRepositoryImpl dao;
 
     @DisplayName(value = "Вернуть что нашел, если нашел только одного")
     @Test
