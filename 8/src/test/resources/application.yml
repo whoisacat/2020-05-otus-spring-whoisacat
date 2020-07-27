@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      port: 0
+      database: otusBooks
+  shell:
+    script: false
+    interactive:
+      enabled: false
+
+logging:
+  level:
+    root: INFO
