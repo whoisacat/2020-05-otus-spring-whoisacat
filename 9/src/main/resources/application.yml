@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    schema:
+      - classpath:data/schema.sql
+    initialization-mode: always
+    url: jdbc:h2:mem:testdb
+    data: classpath:data/data.sql
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+#spring.datasource.initialization-mode=always
+  #spring.jpa.hibernate.ddl-auto=validate

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+            horiz-align: center;
+            align-content: center;
+        }
+        .books table, th, td {
+            width: 80%;
+            border: 1px solid black;
+        }
+
+        #title {
+            text-align: left;
+            font-size: 200%;
+            font-weight: bold;
+        }
+        #footer {
+            text-align: center;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            padding: 10px;
+            background: #39b54a;
+            color: #fff;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div style="/*border: dashed black;*/width: 80%; position: fixed; left: 10%" >
+    <div style="alignment: left;text-align: left;">
+        <span id="title">Книги:</span>
+        <span style="position: fixed; right: 10%">
+            <form action="/addBook" style="alignment: right">
+                <input type="submit" value="Добавить книгу" />
+            </form>
+<!--            <button >-->
+<!--                Добавить книгу-->
+<!--            </button>-->
+        </span>
+    </div>
+    <table class="books" align="center" width="100%" style="border-collapse: collapse">
+        <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books.content}">
+            <td th:text="${book.title}">Some book</td>
+            <td th:text="${book.author.title}">1</td>
+            <td th:text="${book.genre.title}">1</td>
+            <td>
+                <span><a th:href="@{/edit(id=${book.id})}" href="edit.html">Редактировать</a></span>
+                <span>&emsp;</span>
+                <span><a th:href="@{/delete(id=${book.id})}" href="list.html">Удалить</a></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+    <div Страницы id="footer">
+        <span th:if="${books.hasPrevious()}"><a th:href="@{${books.previousOrFirstPageable().getPageNumber()}}" href="list.html"/>Предыдущая</span>
+        <span style='padding-left:10px;'> </span>
+        <span th:if="${books.hasNext()}"><a th:href="@{${books.nextPageable().getPageNumber()}}" href="list.html"/>Следующая</span>
+    </div>
+</div>
+</body>
+</html>
