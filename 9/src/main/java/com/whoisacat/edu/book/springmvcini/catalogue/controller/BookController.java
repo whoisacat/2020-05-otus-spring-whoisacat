@@ -3,8 +3,8 @@ package com.whoisacat.edu.book.springmvcini.catalogue.controller;
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Book;
 import com.whoisacat.edu.book.springmvcini.catalogue.dto.BookDTO;
 import com.whoisacat.edu.book.springmvcini.catalogue.service.BookService;
+import com.whoisacat.edu.book.springmvcini.catalogue.service.UserSettingsService;
 import com.whoisacat.edu.book.springmvcini.catalogue.service.exception.WHOBookNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class BookController{
 
-    public static final int PAGE_SIZE = 10;
-
     private final BookService bookService;
+    private final UserSettingsService userSettingsService;
 
-    @Autowired
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService,
+                          UserSettingsService userSettingsService) {
         this.bookService = bookService;
+        this.userSettingsService = userSettingsService;
     }
 
     @GetMapping("/")
     public String listFirstPage(Model model){
-        Page<Book> books = bookService.findAll(PageRequest.of(0,PAGE_SIZE));
+        Page<Book> books = bookService.findAll(PageRequest.of(0,userSettingsService.getUserSettings().getRowsPerPage()));
         model.addAttribute("books",books);
         return "list";
     }
 
     @GetMapping("/{pageNumber}")
     public String listPage(Model model,@PathVariable Integer pageNumber){
-        Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,PAGE_SIZE));
+        Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,userSettingsService.getUserSettings().getRowsPerPage()));
         model.addAttribute("books",books);
         if(pageNumber == 0){
             return "redirect:/";

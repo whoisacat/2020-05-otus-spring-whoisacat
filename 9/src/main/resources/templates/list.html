@@ -30,9 +30,12 @@
             width: 100%;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-<div style="/*border: dashed black;*/width: 80%; position: fixed; left: 10%" >
+<div style="width: 80%; position: fixed; left: 10%" >
+    <div class="psettings">
+    </div>
     <div style="alignment: left;text-align: left;">
         <span id="title">Книги:</span>
         <span style="position: fixed; right: 10%">
@@ -47,7 +50,7 @@
             <th>Наименование</th>
             <th>Автор</th>
             <th>Жанр</th>
-            <th>Action</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
@@ -70,5 +73,25 @@
         <span th:if="${books.hasNext()}"><a th:href="@{${books.nextPageable().getPageNumber()}}" href="list.html"/>Следующая</span>
     </div>
 </div>
+<script>
+    $(function () {
+
+        $.get('/userSettings').done(function (psettings) {
+            $(".psettings").append(`
+                <span>
+                    <form action="/userSettings", method="POST">
+                        <span>Записей на странице: </span>
+                        <span>
+                            <input type="number" name="rowsPerPage" value=${psettings.rowsPerPage} min="1" max="50" step="1">
+                        </span>
+                    </form>
+                </span>
+                <span>
+                    <button onClick="window.location.reload();">Обновить страницу</button>
+                </span>
+            `);
+        });
+    });
+</script>
 </body>
 </html>
