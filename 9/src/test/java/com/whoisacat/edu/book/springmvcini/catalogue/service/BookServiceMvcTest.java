@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -48,8 +50,10 @@ class BookServiceMvcTest{
     @DisplayName(value = "Должен вернуть то же что и дао")
     @Test
     void findAll(){
-        when(repository.getAllBy()).thenReturn(Lists.newArrayList(BOOK_ODIN));
-        assertThat(service.findAll(PageRequest.of(0,100))).isEqualTo(Lists.newArrayList(BOOK_ODIN));
+        PageRequest pr = PageRequest.of(0,100);
+        when(repository.getAllBy(pr)).thenReturn(Lists.newArrayList(BOOK_ODIN));
+        Page<Book> page = new PageImpl<>(Lists.newArrayList(BOOK_ODIN));
+        assertThat(service.findAll(pr).toList()).isEqualTo(page.toList());
     }
 
     @DisplayName(value = "Должен выбросить исключение если книга не добавилась")

@@ -1,6 +1,7 @@
 package com.whoisacat.edu.book.jpa.catalogue.repository;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
+import com.whoisacat.edu.book.jpa.catalogue.domain.BookDTO;
 
 import java.util.List;
 
@@ -11,6 +12,8 @@ public interface BookRepository{
     Book save(Book book);
 
     Book getById(long id);
+
+    BookDTO getDTOById(long id);
 
     List<Book> getByName(String name);
 

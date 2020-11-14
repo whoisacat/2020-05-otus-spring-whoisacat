@@ -3,6 +3,7 @@ package com.whoisacat.edu.book.jpa.catalogue.repository;
 import com.google.common.collect.Lists;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Author;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
+import com.whoisacat.edu.book.jpa.catalogue.domain.BookDTO;
 import com.whoisacat.edu.book.jpa.catalogue.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,6 +103,17 @@ class BookRepositoryImplTest{
         assertThat(CLEAN_CODE.getAuthor().getTitle()).isEqualTo(actual.getAuthor().getTitle());
         assertThat(CLEAN_CODE.getGenre().getId()).isEqualTo(actual.getGenre().getId());
         assertThat(CLEAN_CODE.getGenre().getTitle()).isEqualTo(actual.getGenre().getTitle());
+    }
+
+    @Transactional
+    @DisplayName("Найти книгу по идентефикатору")
+    @Test
+    void getDTOById(){
+        BookDTO actual = repository.getDTOById(CLEAN_CODE_ID);
+        assertThat(CLEAN_CODE.getId()).isEqualTo(actual.getId());
+        assertThat(CLEAN_CODE.getTitle()).isEqualTo(actual.getTitle());
+        assertThat(CLEAN_CODE.getAuthor().getTitle()).isEqualTo(actual.getAuthor());
+        assertThat(CLEAN_CODE.getGenre().getTitle()).isEqualTo(actual.getGenre());
     }
 
     @Transactional

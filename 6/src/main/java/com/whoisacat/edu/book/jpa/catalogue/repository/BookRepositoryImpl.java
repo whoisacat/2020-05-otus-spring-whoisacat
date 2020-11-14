@@ -1,6 +1,7 @@
 package com.whoisacat.edu.book.jpa.catalogue.repository;
 
 import com.whoisacat.edu.book.jpa.catalogue.domain.Book;
+import com.whoisacat.edu.book.jpa.catalogue.domain.BookDTO;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -33,6 +34,22 @@ public class BookRepositoryImpl implements BookRepository{
                 "join fetch Author a on b.author = a.id " +
                 "join fetch Genre g on b.genre = g.id " +
                 "where b.id = :id",Book.class);
+        query.setParameter("id",id);
+        try{
+            return query.getSingleResult();
+        }catch(NoResultException e){
+            return null;
+        }
+    }
+
+    @Override
+    public BookDTO getDTOById(long id){
+        TypedQuery<BookDTO> query = em.createQuery(
+                "select new com.whoisacat.edu.book.jpa.catalogue.domain.BookDTO(b.id,b.title,b.author.title,b.genre.title)" +
+                        " from Book b " +
+//                        "join fetch Author a on b.author.id = a.id " +
+//                        "join fetch Genre g on b.genre.id = g.id " +
+                        "where b.id = :id",BookDTO.class);
         query.setParameter("id",id);
         try{
             return query.getSingleResult();
