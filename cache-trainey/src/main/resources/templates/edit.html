@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Book edition -->
+<form id="edit-form" th:action="@{/edit(id=${dto.id})}" th:method="post" action="edit.html">
+    <h1>Book Info:</h1>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" th:value="${dto.id}" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="title-input">Name:</label>
+        <input id="title-input" name="title" type="text" th:value="${dto.title}" value="Some book"/>
+    </div>
+
+<!-- Author -->
+    <div class="row">
+        <label for="author-id-input">ID:</label>
+        <input id="author-id-input" name="authorId" type="text" th:value="${dto.authorId}" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="author-title-input">Name:</label>
+        <input id="author-title-input" name="authorTitle" type="text" th:value="${dto.authorTitle}" value="Some author"/>
+    </div>
+
+<!-- Genre -->
+    <div class="row">
+        <label for="genre-id-input">ID:</label>
+        <input id="genre-id-input" name="genreId" type="text" th:value="${dto.genreId}" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="genre-title-input">Name:</label>
+        <input id="genre-title-input" name="genreTitle" type="text" th:value="${dto.genreTitle}" value="Some genre"/>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+
+</body>
+</html>
