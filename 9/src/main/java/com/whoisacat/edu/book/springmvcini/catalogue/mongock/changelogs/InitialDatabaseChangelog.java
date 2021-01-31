@@ -1,4 +1,4 @@
-package com.whoisacat.edu.book.springmvcini.catalogue.changelogs;
+package com.whoisacat.edu.book.springmvcini.catalogue.mongock.changelogs;
 
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;

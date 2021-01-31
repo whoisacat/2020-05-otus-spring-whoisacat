@@ -7,9 +7,13 @@ import com.whoisacat.edu.book.springmvcini.catalogue.service.UserSettingsService
 import com.whoisacat.edu.book.springmvcini.catalogue.service.exception.WHOBookNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Date;
 
 @Controller
 public class BookController{
@@ -24,14 +28,14 @@ public class BookController{
     }
 
     @GetMapping("/")
-    public String listFirstPage(Model model){
+    public String getFirstPageList(Model model){
         Page<Book> books = bookService.findAll(PageRequest.of(0,userSettingsService.getUserSettings().getRowsPerPage()));
         model.addAttribute("books",books);
         return "list";
     }
 
     @GetMapping("/{pageNumber}")
-    public String listPage(Model model,@PathVariable Integer pageNumber){
+    public String getDeterminedPageList(Model model,@PathVariable Integer pageNumber){
         Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,userSettingsService.getUserSettings().getRowsPerPage()));
         model.addAttribute("books",books);
         if(pageNumber == 0){
@@ -41,7 +45,7 @@ public class BookController{
     }
 
     @GetMapping("/edit")
-    public String editPage(@RequestParam("id") String id, Model model) {
+    public String editBook(@RequestParam("id") String id, Model model) {
         Book book = bookService.findById(id).orElseThrow(WHOBookNotFoundException::new);
         BookDTO dto = new BookDTO(book.getId(),book.getTitle(),book.getAuthor().getId(),book.getAuthor().getTitle(),
                 book.getGenre().getId(),book.getGenre().getTitle());
@@ -73,12 +77,17 @@ public class BookController{
         return "redirect:/";
     }
 
-    @Controller
-    static class FaviconController {
+    @ControllerAdvice
+    public class BookControllerAdviser {
 
-        @GetMapping("favicon.ico")
-        @ResponseBody
-        void returnNoFavicon() {
+        @ExceptionHandler(NullPointerException.class)
+        public ModelAndView handleNPE(NullPointerException e) {
+            ModelAndView m = new ModelAndView("err400");
+            m.addObject("message", e.getMessage());
+            m.addObject("timestamp", new Date());
+            m.addObject("status", 400);
+            m.setStatus(HttpStatus.BAD_REQUEST);
+            return m;
         }
     }
 }

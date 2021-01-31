@@ -16,4 +16,4 @@ mongock:
   runner-type: "ApplicationRunner" # default
   #runner-type: "InitializingBean"
   change-logs-scan-package:
-    - com.whoisacat.edu.book.springmvcini.catalogue.changelogs
+    - com.whoisacat.edu.book.springmvcini.catalogue.mongock.changelogs
