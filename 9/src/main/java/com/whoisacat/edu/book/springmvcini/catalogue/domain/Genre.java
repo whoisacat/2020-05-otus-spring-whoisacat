@@ -1,32 +1,42 @@
 package com.whoisacat.edu.book.springmvcini.catalogue.domain;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "genre",uniqueConstraints={@UniqueConstraint(columnNames={"title"})})
+@Document(collection = "genre")
 public class Genre implements Titled{
 
     @Id
-    @SequenceGenerator(name="genre_seq", sequenceName = "genre_seq",allocationSize = 1)
-    @GeneratedValue(generator="genre_seq")
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "title")
+    private String id;
+
+    @Field(name = "title")
     private String title;
 
     public Genre(){
     }
 
-    public Genre(Long id,String title){
+    public Genre(String id,String title){
         this.id = id;
         this.title = title;
     }
 
-    public Long getId(){
+    public Genre(String title){
+        this.title = title;
+    }
+
+    public String getId(){
         return id;
     }
 
     public String getTitle(){
         return title;
+    }
+
+    @Override public String toString(){
+        return "Genre{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

@@ -67,4 +67,8 @@ public class AuthorServiceMvc implements AuthorService{
     @Override public Author update(Author author){
         return repository.save(author);
     }
+
+    @Override public List<Author> findAuthorsWithSubstringInTitle(String substring) {
+        return repository.getByTitleContains(substring);
+    }
 }

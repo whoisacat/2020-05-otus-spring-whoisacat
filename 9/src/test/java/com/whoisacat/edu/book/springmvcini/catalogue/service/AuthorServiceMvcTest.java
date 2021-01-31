@@ -5,12 +5,13 @@ import com.whoisacat.edu.book.springmvcini.catalogue.repository.AuthorRepository
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Author;
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Book;
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Genre;
+import com.whoisacat.edu.book.springmvcini.catalogue.repository.BookRepository;
+import com.whoisacat.edu.book.springmvcini.catalogue.repository.GenreRepository;
 import com.whoisacat.edu.book.springmvcini.catalogue.service.exception.WHORequestClientException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -25,31 +26,36 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Сервис для работы с авторами должен")
-@DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import(AuthorServiceMvc.class)
+@Import({AuthorServiceMvc.class, BookServiceMvc.class,GenreServiceMvc.class})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class AuthorServiceMvcTest{
 
-    private static final Genre GENRE_1 = new Genre(1L,"1");
-    private static final Author AUTHOR_1 = new Author(1L,"1");
-    private static final Book BOOK_1 = new Book(1L,"1",AUTHOR_1,GENRE_1);
-    private static final Author AUTHOR_1_WITH_BOOK = new Author(1L,"1");
-    private static final Author AUTHOR_2 = new Author(2L,"2");
+    private static final Genre GENRE_1 = new Genre("1L","1");
+    private static final Author AUTHOR_1 = new Author("1L","1");
+    private static final Book BOOK_1 = new Book("1L","1",AUTHOR_1,GENRE_1);
+    private static final Author AUTHOR_1_WITH_BOOK = new Author("1L","1");
+    private static final Author AUTHOR_2 = new Author("2L","2");
 
     @Autowired
-    private AuthorServiceMvc service;
+    private AuthorService service;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private GenreService genreService;
 
     @MockBean
     private AuthorRepository repository;
     @MockBean
-    private BookService bookService;
+    private BookRepository bookRepository;
+    @MockBean
+    private GenreRepository genreRepository;
 
     @Test
     void getAllAuthorsString(){
         when(repository.getAllBy())
                 .thenReturn(Lists.newArrayList(AUTHOR_1_WITH_BOOK,AUTHOR_2));
-        when(bookService.findByAuthorId(1L)).thenReturn(Collections.singletonList(BOOK_1));
+        when(bookService.findByAuthorId("1L")).thenReturn(Collections.singletonList(BOOK_1));
         assertThat(service.getAllAuthorsString()).isEqualTo("1 Книги: 1; \n2 Книги: \n");
     }
 

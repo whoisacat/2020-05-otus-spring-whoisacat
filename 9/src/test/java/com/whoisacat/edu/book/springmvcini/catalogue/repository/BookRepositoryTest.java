@@ -6,13 +6,10 @@ import com.whoisacat.edu.book.springmvcini.catalogue.domain.Book;
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Genre;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,15 +17,20 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Dao для работы с книгами должно")
-@DataJpaTest
-@ExtendWith(SpringExtension.class)
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-class BookRepositoryTest{
+@DataMongoTest
+@ComponentScan({"com.whoisacat.edu.book.springmvcini.catalogue.mongock",
+        "com.whoisacat.edu.book.springmvcini.catalogue.repositories"})
+class BookRepositoryTest {
 
+    public static final String CLEAN_ARCH_TITLE = "Чистая архитектура";
+    public static final String UNCLE_BOB_TITLE = "Роберт Мартин";
+    public static final String PROGRAMMING_TITLE = "Программирование";
+    public static final String CLEAN_CODER_TITLE = "Идевльный программист";
+    public static final String THE_ART_OF_WAR = "Исскуство войны";
     @Autowired BookRepository repository;
-    private static final Author ROBERT_MARTIN = new Author(3L,"Роберт Мартин");;
-    private static final Genre PROGRAMMING = new Genre(1L,"Программирование");
-    private static final Book CLEAN_CODE = new Book(2L,"Чистый код",ROBERT_MARTIN,PROGRAMMING);;
+    private static final Author ROBERT_MARTIN = new Author("3","Роберт Мартин");;
+    private static final Genre PROGRAMMING = new Genre("1","Программирование");
+    private static final Book CLEAN_CODE = new Book("2","Чистый код",ROBERT_MARTIN,PROGRAMMING);;
 
     @DisplayName("Правильно насчитать шесть книг")
     @Test
@@ -36,91 +38,75 @@ class BookRepositoryTest{
         assertThat(6).isEqualTo(repository.count());
     }
 
-    @Transactional
     @DisplayName("Вставить книгу")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insert(){
-        assertThat(repository.save(new Book(null,"Чистая архитектура",
-                new Author(3L,""),
-                new Genre(1L,""))).getId()).isEqualTo(repository.count());
+        assertThat(repository.count()).isEqualTo(6);
+        repository.save(new Book(null,CLEAN_ARCH_TITLE,
+            new Author("3",""),
+            new Genre("1","")));
+        assertThat(repository.count()).isEqualTo(7);
     }
 
-    @Transactional
     @DisplayName("Вставить книгу с правильным автором")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectAuthorName(){
-        assertThat(7L).isEqualTo(repository.save(new Book(null,"Чистая архитектура",
-                new Author(3L,"Роберт Мартин"),
-                new Genre(1L,"Программирование"))).getId());
-        assertThat(repository.getById(repository.count()).getAuthor().getTitle()).isEqualTo("Роберт Мартин");
+        Book book = repository.save(new Book(CLEAN_ARCH_TITLE,
+                new Author(UNCLE_BOB_TITLE),
+                new Genre(PROGRAMMING_TITLE)));
+        assertThat(CLEAN_ARCH_TITLE).isEqualTo(book.getTitle());
+        assertThat(book.getAuthor().getTitle()).isEqualTo(UNCLE_BOB_TITLE);
     }
 
-    @Transactional
     @DisplayName("Вставить книгу с правильным названием")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertWithCorrectName(){
-        Book book = repository.save(new Book(null,"Чистая архитектура",
-                new Author(3L,""),
-                new Genre(1L,"")));
-        assertThat(7L).isEqualTo(book.getId());
-        assertThat(book.getTitle()).isEqualTo("Чистая архитектура");
+        Book book = repository.save(new Book(CLEAN_ARCH_TITLE,
+                new Author("3",""),
+                new Genre("1","")));
+        assertThat(book.getTitle()).isEqualTo(CLEAN_ARCH_TITLE);
     }
 
-    @Transactional
-    @DisplayName("Найти книгу по идентефикатору")
+    @DisplayName("Найти книгу по названию")
     @Test
     void getById(){
-        Book actual = repository.getById(2);
-        assertThat(CLEAN_CODE.getId()).isEqualTo(actual.getId());
+        Book actual = repository.getBooksByTitleLike(CLEAN_CODE.getTitle()).get(0);
         assertThat(CLEAN_CODE.getTitle()).isEqualTo(actual.getTitle());
-        assertThat(CLEAN_CODE.getAuthor().getId()).isEqualTo(actual.getAuthor().getId());
         assertThat(CLEAN_CODE.getAuthor().getTitle()).isEqualTo(actual.getAuthor().getTitle());
-        assertThat(CLEAN_CODE.getGenre().getId()).isEqualTo(actual.getGenre().getId());
         assertThat(CLEAN_CODE.getGenre().getTitle()).isEqualTo(actual.getGenre().getTitle());
     }
 
-    @Transactional
     @DisplayName("Найти книгу по названию")
     @Test
     void getByName(){
         List<Book> actualList = repository.getAllByTitleContains("Чистый");
         assertThat(1).isEqualTo(actualList.size());
         Book actual = actualList.get(0);
-        assertThat(CLEAN_CODE.getId()).isEqualTo(actual.getId());
         assertThat(CLEAN_CODE.getTitle()).isEqualTo(actual.getTitle());
-        assertThat(CLEAN_CODE.getAuthor().getId()).isEqualTo(actual.getAuthor().getId());
         assertThat(CLEAN_CODE.getAuthor().getTitle()).isEqualTo(actual.getAuthor().getTitle());
-        assertThat(CLEAN_CODE.getGenre().getId()).isEqualTo(actual.getGenre().getId());
         assertThat(CLEAN_CODE.getGenre().getTitle()).isEqualTo(actual.getGenre().getTitle());
     }
 
-    @Transactional
     @DisplayName("Найти книгу по автору")
     @Test
     void getByAuthor(){
 
-        List<Book> actual = repository.getByAuthorId(3);
+        List<Book> actual = repository.getByAuthor_Title(UNCLE_BOB_TITLE);
 
-        Author author = new Author(3L,"Роберт Мартин");
-        Genre genre = new Genre(1L,"Программирование");
-        Book expected2 = new Book(3L,"Идевльный программист",author,genre);
+        Author author = new Author(UNCLE_BOB_TITLE);
+        Genre genre = new Genre(PROGRAMMING_TITLE);
+        Book expected2 = new Book("3",CLEAN_CODER_TITLE,author,genre);
         List<Book> expected = Lists.newArrayList(CLEAN_CODE,expected2);
         expected.sort(Comparator.comparing(Book::getId));
         actual.sort(Comparator.comparing(Book::getId));
         assertThat(expected.size()).isEqualTo(actual.size());
-        assertThat(expected.get(0).getId() == actual.get(0).getId());
-        assertThat(expected.get(1).getId() == actual.get(1).getId());
         assertThat(expected.get(0).getTitle() == actual.get(0).getTitle());
         assertThat(expected.get(1).getTitle() == actual.get(1).getTitle());
-        assertThat(expected.get(0).getAuthor().getId() == actual.get(0).getAuthor().getId());
-        assertThat(expected.get(1).getAuthor().getId() == actual.get(1).getAuthor().getId());
         assertThat(expected.get(0).getAuthor().getTitle() == actual.get(0).getAuthor().getTitle());
         assertThat(expected.get(1).getAuthor().getTitle() == actual.get(1).getAuthor().getTitle());
-        assertThat(expected.get(0).getGenre().getId() == actual.get(0).getGenre().getId());
-        assertThat(expected.get(1).getGenre().getId() == actual.get(1).getGenre().getId());
         assertThat(expected.get(0).getGenre().getTitle() == actual.get(0).getGenre().getTitle());
         assertThat(expected.get(1).getGenre().getTitle() == actual.get(1).getGenre().getTitle());
     }
@@ -131,32 +117,34 @@ class BookRepositoryTest{
         assertThat(repository.getAllBy().size()).isEqualTo(6);
     }
 
-    @Transactional
-    @DisplayName(value = "Удалить книгу по идентификатору")
+    @DisplayName(value = "Удалить книгу по названию")
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteById(){
         long count = repository.count();
-        repository.deleteById(1);
+        String id = repository.getBooksByTitleLike(CLEAN_CODE.getTitle()).get(0).getId();
+        assertThat(repository.getById(id)).isNotNull();
+        assertThat(repository.deleteByTitle(CLEAN_CODE.getTitle())).isEqualTo(1);
         assertThat(count - 1).isEqualTo(repository.count());
-        assertThat(repository.getById(1)).isNull();
+        assertThat(repository.getById(id)).isNull();
     }
 
-    @Transactional
     @DisplayName(value = "Удалить книгу по имени")
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteByName(){
         long count = repository.count();
-        assertThat(1).isEqualTo(repository.deleteByTitle("Исскуство войны"));
+        String id = repository.getBooksByTitleLike(THE_ART_OF_WAR).get(0).getId();
+        assertThat(repository.getById(id)).isNotNull();
+        assertThat(1).isEqualTo(repository.deleteByTitle(THE_ART_OF_WAR));
         assertThat(count - 1).isEqualTo(repository.count());
-        assertThat(repository.getById(1)).isNull();
+        assertThat(repository.getById(id)).isNull();
     }
 
-    @DisplayName(value = "Найти книгу по названию и идентефикаторам автора и жанра")
+    @DisplayName(value = "Найти книгу по всем названиям")
     @Test
     void findByNameAndAuthorIdAndGenreId(){
-        List<Book> actual = repository.findByTitleContainsAndAuthorIdAndGenreId("Чистый ко",3,1);
+        List<Book> actual = repository.findByTitleContainsAndAuthorTitleLikeAndGenreTitleLike("Чистый ко",UNCLE_BOB_TITLE,PROGRAMMING_TITLE);
         assertThat(actual.size()).isEqualTo(1);
         assertThat(actual.get(0).getTitle()).isEqualTo("Чистый код");
     }

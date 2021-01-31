@@ -10,7 +10,7 @@ import com.whoisacat.edu.book.springmvcini.catalogue.service.exception.WHOBookAl
 import com.whoisacat.edu.book.springmvcini.catalogue.service.exception.WHODataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +31,8 @@ public class BookServiceMvc implements BookService{
         this.genreService = genreService;
     }
 
-    @Override public Page<Book> findAll(Pageable pageable){
-        return new PageImpl<>(repository.getAllBy(pageable),pageable,repository.count());
+    @Override public Page<Book> findAll(PageRequest pageRequest){
+        return new PageImpl<>(repository.getAllBy(pageRequest),pageRequest,repository.count());
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class BookServiceMvc implements BookService{
     }
 
     @Transactional(readOnly = true)
-    @Override public List<Book> findByAuthorId(long id){
+    @Override public List<Book> findByAuthorId(String id){
         return repository.getByAuthorId(id);
     }
 
@@ -73,7 +73,8 @@ public class BookServiceMvc implements BookService{
         return sb.toString();
     }
 
-    @Override public Optional<Book> findById(long id){
+    @Override
+    public Optional<Book> findById(String id){
         return repository.findById(id);
     }
 
@@ -87,7 +88,19 @@ public class BookServiceMvc implements BookService{
         return repository.save(book);
     }
 
-    @Override public void delete(long id){
+    @Override
+    public void delete(String id){
         repository.deleteById(id);
+    }
+
+    @Override public List<Book> findBooksWithSubstringInTitle(String substring) {
+        return repository.getAllByTitleContains(substring);
+    }
+
+    @Override public Book findByOwnAndAuthorAndGenreTitles(String title, String authorTitle, String genreTitle) {
+        return repository
+                .findByTitleLikeAndAuthorTitleLikeAndGenreTitleLike(title,authorTitle,genreTitle)
+                .orElseThrow();
+
     }
 }

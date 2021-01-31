@@ -1,37 +1,41 @@
 package com.whoisacat.edu.book.springmvcini.catalogue.domain;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "book")
+@Document(collection = "book")
 public class Book implements Titled{
 
     @Id
-    @SequenceGenerator(name="book_seq", sequenceName = "book_seq",allocationSize = 1)
-    @GeneratedValue(generator="book_seq")
-    @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @Column(name = "title")
+    @Field(name = "title")
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Field(name = "author",order = 3)
     private Author author;
 
-    @ManyToOne
+    @Field(name = "genre",order = 4)
     private Genre genre;
 
     public Book(){
     }
 
-    public Book(Long id,String title,Author author,Genre genre){
+    public Book(String id,String title,Author author,Genre genre){
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
     }
 
-    public Long getId(){
+    public Book(String title,Author author,Genre genre){
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
+
+    public String getId(){
         return id;
     }
 
@@ -45,5 +49,14 @@ public class Book implements Titled{
 
     public Genre getGenre(){
         return genre;
+    }
+
+    @Override public String toString(){
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", author=" + author +
+                ", genre=" + genre +
+                '}';
     }
 }

@@ -1,32 +1,43 @@
 package com.whoisacat.edu.book.springmvcini.catalogue.domain;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "author")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document(collection = "author")
 public class Author implements Titled{
 
     @Id
-    @SequenceGenerator(name="author_seq", sequenceName = "author_seq",allocationSize = 1)
-    @GeneratedValue(generator="author_seq")
-    @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @Column(name = "title")
+    @Field(name = "title")
     private String title;
 
-    public Author(Long id,String title){
+    public Author(String id,String title){
         this.id = id;
         this.title = title;
     }
 
     public Author(){
     }
-    public Long getId(){
+
+    public Author(String title){
+        this.title = title;
+    }
+
+    public String getId(){
         return id;
     }
 
     public String getTitle(){
         return title;
+    }
+
+    @Override public String toString(){
+        return "Author{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

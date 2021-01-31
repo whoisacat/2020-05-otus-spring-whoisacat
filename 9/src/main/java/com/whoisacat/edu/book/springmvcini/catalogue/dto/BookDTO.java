@@ -2,14 +2,19 @@ package com.whoisacat.edu.book.springmvcini.catalogue.dto;
 
 public class BookDTO{
 
-    private final Long id;
+    private final String id;
     private final String title;
-    private final Long authorId;
+    private final String authorId;
     private final String authorTitle;
-    private final Long genreId;
+    private final String genreId;
     private final String genreTitle;
 
-    public BookDTO(Long id,String title,Long authorId,String authorTitle,Long genreId,String genreTitle){
+    public BookDTO(String id,
+                   String title,
+                   String authorId,
+                   String authorTitle,
+                   String genreId,
+                   String genreTitle) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
@@ -18,7 +23,7 @@ public class BookDTO{
         this.genreTitle = genreTitle;
     }
 
-    public Long getId(){
+    public String getId(){
         return id;
     }
 
@@ -26,7 +31,7 @@ public class BookDTO{
         return title;
     }
 
-    public Long getAuthorId(){
+    public String getAuthorId(){
         return authorId;
     }
 
@@ -34,7 +39,7 @@ public class BookDTO{
         return authorTitle;
     }
 
-    public Long getGenreId(){
+    public String getGenreId(){
         return genreId;
     }
 

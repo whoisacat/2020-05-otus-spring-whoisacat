@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -20,14 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Сервис для работы с жанрами должен")
-@DataJpaTest
 @ExtendWith(SpringExtension.class)
 @Import(GenreServiceMvc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class GenreServiceMvcTest{
 
-    private static final Genre GENRE_ODIN = new Genre(1L,"godin");
-    private static final Genre GENRE_SECONDO = new Genre(2L,"second one");
+    private static final Genre GENRE_ODIN = new Genre("1L","godin");
+    private static final Genre GENRE_SECONDO = new Genre("2L","second one");
 
     @Autowired GenreServiceMvc service;
 

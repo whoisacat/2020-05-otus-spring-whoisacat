@@ -27,7 +27,7 @@ public class GenreServiceMvc implements GenreService{
             throw new WHOGenreAlreadyExists();
         }
         Genre author = new Genre(null,authorString);
-        long id = repository.save(author).getId();
+        String id = repository.save(author).getId();
         return repository.getById(id);
     }
 

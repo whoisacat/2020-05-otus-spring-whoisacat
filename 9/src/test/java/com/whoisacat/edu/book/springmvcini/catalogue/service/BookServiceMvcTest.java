@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
@@ -28,15 +27,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Сервис для работы с книгами должен")
-@DataJpaTest
 @ExtendWith(SpringExtension.class)
 @Import(BookServiceMvc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class BookServiceMvcTest{
 
-    private static final Author AUTHOR_ODIN = new Author(1L,"odin");
-    private static final Genre GENRE_OGIN = new Genre(1L,"ogin");
-    private static final Book BOOK_ODIN = new Book(1L,"bodin",AUTHOR_ODIN,GENRE_OGIN);
+    private static final Author AUTHOR_ODIN = new Author("1L","odin");
+    private static final Genre GENRE_OGIN = new Genre("1L","ogin");
+    private static final Book BOOK_ODIN = new Book("1L","bodin",AUTHOR_ODIN,GENRE_OGIN);
     private static final String GENRE_STRING = "genreString";
     private static final String AUTHOR_STRING = "authorString";
 
@@ -52,6 +50,7 @@ class BookServiceMvcTest{
     void findAll(){
         PageRequest pr = PageRequest.of(0,100);
         when(repository.getAllBy(pr)).thenReturn(Lists.newArrayList(BOOK_ODIN));
+        when(repository.count()).thenReturn(1L);
         Page<Book> page = new PageImpl<>(Lists.newArrayList(BOOK_ODIN));
         assertThat(service.findAll(pr).toList()).isEqualTo(page.toList());
     }
@@ -77,7 +76,7 @@ class BookServiceMvcTest{
         when(authorService.findByNameOrCreate(AUTHOR_STRING))
                 .thenReturn(AUTHOR_ODIN);
         when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
-        when(repository.findByTitleContainsAndAuthorIdAndGenreId("name",1,1))
+        when(repository.findByTitleContainsAndAuthorIdAndGenreId("name","1L","1L"))
                 .thenReturn(Lists.newArrayList(BOOK_ODIN));
         assertThrows(WHOBookAlreadyExists.class,()->service.addBook("name",AUTHOR_STRING,GENRE_STRING));
     }
@@ -89,10 +88,10 @@ class BookServiceMvcTest{
         when(authorService.findByNameOrCreate(AUTHOR_STRING))
                 .thenReturn(AUTHOR_ODIN);
         when(genreService.findByNameOrCreate(GENRE_STRING)).thenReturn(GENRE_OGIN);
-        when(repository.findByTitleContainsAndAuthorIdAndGenreId("name",1,1))
+        when(repository.findByTitleContainsAndAuthorIdAndGenreId("name","1","1"))
                 .thenReturn(Lists.newArrayList());
         when(repository.save(any(Book.class))).thenReturn(BOOK_ODIN);
-        when(repository.getById(1L)).thenReturn(BOOK_ODIN);
+        when(repository.getById("1L")).thenReturn(BOOK_ODIN);
         Book book = service.addBook(BOOK_ODIN.getTitle(),AUTHOR_STRING,GENRE_STRING);
         assertThat(book.getTitle())
                 .isEqualTo(BOOK_ODIN.getTitle());
@@ -108,7 +107,7 @@ class BookServiceMvcTest{
     @DisplayName(value = "Должен передать что ему сказало дао")
     @Test
     void findByAuthorId(){
-        when(repository.getByAuthorId(707)).thenReturn(Lists.newArrayList(BOOK_ODIN));
-        assertThat(service.findByAuthorId(707)).isEqualTo(Lists.newArrayList(BOOK_ODIN));
+        when(repository.getByAuthorId("707")).thenReturn(Lists.newArrayList(BOOK_ODIN));
+        assertThat(service.findByAuthorId("707")).isEqualTo(Lists.newArrayList(BOOK_ODIN));
     }
 }

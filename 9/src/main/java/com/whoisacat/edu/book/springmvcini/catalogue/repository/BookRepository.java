@@ -1,40 +1,38 @@
 package com.whoisacat.edu.book.springmvcini.catalogue.repository;
 
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Book;
-import org.hibernate.annotations.BatchSize;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends PagingAndSortingRepository<Book,Long>{
+public interface BookRepository extends MongoRepository<Book,String>{
 
     long count();
 
-    Book getById(long id);
+    Book getById(String id);
 
     List<Book> getAllByTitleContains(String title);
 
-    List<Book> getByAuthorId(long authorId);
+    List<Book> getByAuthor_Title(String authorTitle);
 
-    @EntityGraph(attributePaths = {"author","genre"})
-    @BatchSize(size = 2)
     List<Book> getAllBy(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"author","genre"})
-    @BatchSize(size = 2)
-    List<Book> getAllBy();
-
-    @EntityGraph(attributePaths = {"author","genre"})
-    @BatchSize(size = 2)
-    Optional<Book> findById(long id);
-
-    void deleteById(long id);
+    List<Book> getAllBy(PageRequest pageRequest);
 
     int deleteByTitle(String title);
 
-    @EntityGraph(attributePaths = {"author","genre"})
-    List<Book> findByTitleContainsAndAuthorIdAndGenreId(String bookString,long authorId,long genreId);
+    List<Book> findByTitleContainsAndAuthorTitleLikeAndGenreTitleLike(String bookString,String authorTitle,String genreTitle);
+
+    List<Book> getBooksByTitleLike(String title);
+
+    Optional<Book> findByTitleLikeAndAuthorTitleLikeAndGenreTitleLike(String title,String authorTitle,String genreTitle);
+
+    List<Book> getByAuthorId(String id);
+
+    List<Book> findByTitleContainsAndAuthorIdAndGenreId(String bookString, String id, String id1);
+
+    List<Book> getAllBy();
 }

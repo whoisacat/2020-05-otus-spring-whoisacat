@@ -41,7 +41,7 @@ public class BookController{
     }
 
     @GetMapping("/edit")
-    public String editPage(@RequestParam("id") long id, Model model) {
+    public String editPage(@RequestParam("id") String id, Model model) {
         Book book = bookService.findById(id).orElseThrow(WHOBookNotFoundException::new);
         BookDTO dto = new BookDTO(book.getId(),book.getTitle(),book.getAuthor().getId(),book.getAuthor().getTitle(),
                 book.getGenre().getId(),book.getGenre().getTitle());
@@ -57,7 +57,7 @@ public class BookController{
     }
 
     @GetMapping("/delete")
-    public String deleteBook(@RequestParam("id") long id) {
+    public String deleteBook(@RequestParam("id") String id) {
         bookService.delete(id);
         return "redirect:/";
     }

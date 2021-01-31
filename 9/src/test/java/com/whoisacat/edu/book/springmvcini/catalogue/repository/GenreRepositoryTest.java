@@ -1,73 +1,56 @@
 package com.whoisacat.edu.book.springmvcini.catalogue.repository;
 
 import com.whoisacat.edu.book.springmvcini.catalogue.domain.Genre;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Dao для работы с жанрами должно")
-@DataJpaTest
-@ExtendWith(SpringExtension.class)
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
-class GenreRepositoryTest{
+@DataMongoTest
+@ComponentScan({"com.whoisacat.edu.book.springmvcini.catalogue.mongock",
+        "com.whoisacat.edu.book.springmvcini.catalogue.repositories"})
+class GenreRepositoryTest {
 
+    public static final String NEW_GENRE = "Новый жанр";
+    public static final String PROGRAMMING = "Программирование";
     @Autowired GenreRepository repository;
 
-    @Transactional
     @DisplayName("насчитать два жанра")
     @Test
     void countGenre(){
         assertThat(repository.count()).isEqualTo(3L);
     }
 
-    @Transactional
     @DisplayName("вставить новый жанр")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void insertGenre(){
-        Genre genre = new Genre(null,"Новый жанр");
-        assertThat(repository.save(genre).getId()).isEqualTo(4L);
+        Genre genre = new Genre(NEW_GENRE);
+        assertThat(repository.save(genre).getTitle()).isEqualTo(NEW_GENRE);
         assertThat(repository.count()).isEqualTo(4L);
-    }
-
-    @DisplayName("не вставить стырый жанр")
-    @Test
-    void dontInsertGenre(){
-        long count = repository.count();
-        Genre genre = new Genre(null,"Программирование");
-        assertThrows(DataIntegrityViolationException.class,()->repository.save(genre));
-        assertThat(repository.count()).isEqualTo(count);
     }
 
     @DisplayName(value = "Найти жанр по идентефикатору")
     @Test
     void getGenreById(){
-        Genre actual = repository.getById(1);
-        assertThat(actual.getId()).isEqualTo(1);
-        assertThat(actual.getTitle()).isEqualTo("Программирование");
+        Genre actual = repository.getById(repository.getByTitleContains(PROGRAMMING).get(0).getId());
+        assertThat(actual.getTitle()).isEqualTo(PROGRAMMING);
     }
 
     @DisplayName(value = "Найти жанр по названию")
     @Test
     void getGenreByName(){
-        List<Genre> actuals = repository.getByTitle("Программирование");
+        List<Genre> actuals = repository.getByTitleContains(PROGRAMMING);
         assertThat(actuals.size()).isEqualTo(1);
         Genre actual = actuals.get(0);
-        assertThat(actual.getId()).isEqualTo(1);
-        assertThat(actual.getTitle()).isEqualTo("Программирование");
+        assertThat(actual.getTitle()).isEqualTo(PROGRAMMING);
     }
 
     @DisplayName(value = "Найти все жанры")
@@ -76,17 +59,15 @@ class GenreRepositoryTest{
         List<Genre> actuals = repository.getAllBy();
         assertThat(actuals.size()).isEqualTo(3);
         Genre actual = actuals.get(0);
-        assertThat(actual.getId()).isEqualTo(1);
         assertThat(actual.getTitle()).isEqualTo("Программирование");
     }
 
-    @Transactional
-    @DisplayName(value = "Удалить жанр по идентефикатору")
+    @DisplayName(value = "Удалить жанр по названию")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void deleteGenreById(){
         long count = repository.count();
-        repository.deleteById(3);
+        repository.deleteByTitle(PROGRAMMING);
         assertThat(repository.count()).isEqualTo(count - 1);
     }
 }
