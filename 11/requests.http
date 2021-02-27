@@ -1,0 +1,37 @@
+POST http://localhost:8080/messages/6037e7a6200272538e212cb1/60350aee83f03c55a69e20d5/?text=hello
+
+###
+POST http://localhost:8080/messages/6037e7a6200272538e212cb1/60350aee83f03c55a69e20d4/?text=helloThere
+
+###
+POST http://localhost:8080/chats/1/2
+
+###
+GET http://localhost:8080/messages/6037e7a6200272538e212cb1
+
+###
+GET http://localhost:8080/chats/3
+
+###
+POST http://localhost:8080/chats/60350aee83f03c55a69e20d5/60350aee83f03c55a69e20d4
+
+###
+GET http://localhost:8080/chats/chatUser/60350aee83f03c55a69e20d4
+
+###
+DELETE http://localhost:8080/chats/6037e295dab07d284da21708
+
+###
+POST http://localhost:8080/chats/60350aee83f03c55a69e20d4/60350aee83f03c55a69e20d5
+
+###
+DELETE http://localhost:8080/messages/6037decdc527da6bb04c0635
+
+###
+POST http://localhost:8080/chatUsers/?email=kesha@whoisacat.com&title=КеШа
+
+###
+GET http://localhost:8080/chatUsers/
+
+###
+DELETE http://localhost:8080/chatUsers/603509f79cf37b12f17bd347

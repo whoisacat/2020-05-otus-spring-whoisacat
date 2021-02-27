@@ -1,0 +1,42 @@
+//		ChatRepository repository = ctxt.getBean(ChatRepository.class);
+//		repository.findById("1").subscribe(c -> {
+//			if (c == null) {
+////				Chat c;
+//				c = new Chat();
+//				c.setId("3");
+//				c.setTitle("some title");
+//				c.setLastChange(OffsetDateTime.now());
+//				repository.save(c).subscribe(chat -> System.out.println(chat.getId()));
+//			} else {
+//				System.out.println("ну");
+//			}
+//		});
+//		ChatUserRepository ur = ctxt.getBean(ChatUserRepository.class);
+//		MessageRepository mr = ctxt.getBean(MessageRepository.class);
+//		ChatUser kesha = new ChatUser();
+////		kesha.setId("1");
+//		kesha.setTitle("КеШа");
+//		kesha.setEmail("kesha@whoisacat.com");
+//		ChatUser kuzya = new ChatUser();
+////		kesha.setId("1");
+//		kuzya.setTitle("КуЗя");
+//		kuzya.setEmail("kuzyaa@whoisacat.com");
+//		repository.findById("3").zipWith((ur.save(kesha)).zipWith(ur.save(kuzya)))
+//				  .subscribe(a -> {
+//					  Chat c = a.getT1();
+//					  ChatUser ke = a.getT2().getT1();
+//					  ChatUser ku = a.getT2().getT2();
+//					  c.setUsers(Lists.newArrayList(ke, ku));
+//					  repository.save(c).subscribe();
+//					  Message m1 = new Message();
+//					  m1.setChat(c);
+//					  m1.setDateTime(LocalDateTime.now());
+//					  m1.setText("привет, Кеша");
+//					  m1.setAuthor(ke);
+//					  Message m2 = new Message();
+//					  m2.setChat(c);
+//					  m2.setDateTime(LocalDateTime.now());
+//					  m2.setText("привет, Кузя!!!");
+//					  m2.setAuthor(ku);
+//					  mr.insert(m1).zipWith(mr.insert(m2)).subscribe();
+//				  });
