@@ -1,0 +1,7 @@
+PUT http://localhost:8080/userSettings/6
+
+
+###
+GET http://localhost:8080/userSettings
+
+
