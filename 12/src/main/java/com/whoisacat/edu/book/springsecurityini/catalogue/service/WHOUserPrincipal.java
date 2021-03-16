@@ -15,7 +15,7 @@ public class WHOUserPrincipal implements UserDetails {
     }
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        return user.getAuthorities();
     }
 
     @Override public String getPassword() {

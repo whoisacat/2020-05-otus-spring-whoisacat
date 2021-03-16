@@ -20,6 +20,7 @@ public class WHOUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new WHOUserPrincipal(user);
+        WHOUserPrincipal whoUserPrincipal = new WHOUserPrincipal(user);
+        return whoUserPrincipal;
     }
 }

@@ -34,7 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-            .and().authorizeRequests().antMatchers("/**").authenticated()
+            .and().authorizeRequests().antMatchers("/edit","/delete","/addBook").hasRole("ADMIN")
+            .and().authorizeRequests().antMatchers("/**").hasRole("USER")
             .and().formLogin()
             .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .and().rememberMe().key("whoChatSecret").tokenValiditySeconds(ONE_DAY_SECONDS);

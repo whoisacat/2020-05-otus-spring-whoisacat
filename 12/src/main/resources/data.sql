@@ -24,3 +24,8 @@ ALTER SEQUENCE user_seq RESTART WITH 3;
 INSERT INTO user_settings (id,user_id) VALUES (1,1);
 INSERT INTO user_settings (id,user_id) VALUES (2,2);
 ALTER SEQUENCE user_settings_seq RESTART WITH 3;
+
+INSERT INTO who_role (id,role_name,who_user_id) VALUES (1,'ROLE_USER',1);
+INSERT INTO who_role (id,role_name,who_user_id) VALUES (2,'ROLE_ADMIN',1);
+INSERT INTO who_role (id,role_name,who_user_id) VALUES (3,'ROLE_USER',2);
+ALTER SEQUENCE who_role_seq RESTART WITH 4;

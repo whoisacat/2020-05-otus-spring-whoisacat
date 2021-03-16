@@ -3,11 +3,13 @@ DROP TABLE IF EXISTS genre;
 DROP TABLE IF EXISTS author;
 DROP TABLE IF EXISTS who_user;
 DROP TABLE IF EXISTS user_settings;
+DROP TABLE IF EXISTS who_role;
 DROP sequence IF EXISTS book_seq;
 DROP sequence IF EXISTS genre_seq;
 DROP sequence IF EXISTS author_seq;
 DROP sequence IF EXISTS user_seq;
 DROP sequence IF EXISTS user_settings_seq;
+DROP sequence IF EXISTS who_role_seq;
 
 create sequence genre_seq;
 CREATE TABLE genre(
@@ -54,4 +56,14 @@ CREATE TABLE user_settings(
 alter table public.user_settings
     add constraint user_settings_who_user_constraint
         foreign key (user_id)
+            references who_user;
+
+create sequence who_role_seq;
+CREATE TABLE who_role(
+    id BIGINT NOT NULL DEFAULT user_seq.nextval primary key,
+    role_name VARCHAR(36) NOT NULL,
+    who_user_id BIGINT REFERENCES who_user(id));
+alter table public.who_role
+    add constraint who_role_who_user
+        foreign key (who_user_id)
             references who_user;
