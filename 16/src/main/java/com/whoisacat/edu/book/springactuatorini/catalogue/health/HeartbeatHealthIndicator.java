@@ -22,10 +22,15 @@ public class HeartbeatHealthIndicator implements HealthIndicator {
 
     @Override public Health health() {
         LocalDateTime now = LocalDateTime.now();
-        List<Heartbeat> heartbeats = repository.getAllByHeartbeatTimeIsAfter(now.minusSeconds(5));
+        List<Heartbeat> heartbeats;
+        try {
+            heartbeats = repository.getAllByHeartbeatTimeIsAfter(now.minusSeconds(5));
+        } catch(Exception e) {
+            return Health.down().withDetail("cause", repository.getClass().getSimpleName() + " unavailable").build();
+        }
         if (heartbeats.size() < 4) {
             if (heartbeats.stream().anyMatch(h -> h.getHeartbeatTime().isAfter(now.minusSeconds(2)))) {
-                return Health.status("RISE").withDetail("Count of heartbets", heartbeats.size()).build();
+                return Health.status("RISE").withDetail("count_of_heartbeats", heartbeats.size()).build();
             } else {
                 return Health.down().build();
             }
