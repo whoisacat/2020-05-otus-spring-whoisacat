@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS book;
 DROP TABLE IF EXISTS genre;
 DROP TABLE IF EXISTS author;
-DROP TABLE IF EXISTS who_user;
 DROP TABLE IF EXISTS user_settings;
 DROP TABLE IF EXISTS who_role;
+DROP TABLE IF EXISTS who_user;
 DROP TABLE IF EXISTS heartbeat;
 DROP sequence IF EXISTS book_seq;
 DROP sequence IF EXISTS genre_seq;
