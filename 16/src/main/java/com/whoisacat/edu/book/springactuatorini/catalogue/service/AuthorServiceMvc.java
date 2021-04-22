@@ -1,9 +1,11 @@
 package com.whoisacat.edu.book.springactuatorini.catalogue.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.book.springactuatorini.catalogue.domain.Book;
 import com.whoisacat.edu.book.springactuatorini.catalogue.repository.AuthorRepository;
 import com.whoisacat.edu.book.springactuatorini.catalogue.domain.Author;
 import com.whoisacat.edu.book.springactuatorini.catalogue.service.exception.WHOAuthorAlreadyExists;
+import com.whoisacat.edu.book.springactuatorini.catalogue.service.exception.WHODataAccessException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class AuthorServiceMvc implements AuthorService{
 
     @Override
     @Transactional
+    @HystrixCommand(commandKey = "getAllAuthorsString", fallbackMethod = "buildFallbackRows")
     public String getAllAuthorsString(){
         List<Author> authorsList = repository.getAllBy();
         StringBuilder sb = new StringBuilder();
@@ -39,7 +42,9 @@ public class AuthorServiceMvc implements AuthorService{
     }
 
     @Transactional
-    @Override public Author findByNameOrCreate(String authorString){
+    @Override
+    @HystrixCommand(commandKey = "findByNameOrCreate", fallbackMethod = "buildFallbackRows")
+    public Author findByNameOrCreate(String authorString){
         List<Author> authors = repository.getByTitle(authorString);
         if(authors.size() == 1){
             return authors.get(0);
@@ -51,12 +56,16 @@ public class AuthorServiceMvc implements AuthorService{
         return repository.save(author);
     }
 
-    @Override public long getAuthorsCount(){
+    @Override
+    @HystrixCommand(commandKey = "getAuthorsCount", fallbackMethod = "buildFallbackRows")
+    public long getAuthorsCount(){
         return repository.count();
     }
 
     @Transactional(readOnly = true)
-    @Override public String findByName(String name){
+    @Override
+    @HystrixCommand(commandKey = "findByName", fallbackMethod = "buildFallbackRows")
+    public String findByName(String name){
         List<Author> authors = repository.getByTitle(name);
         if(authors.isEmpty()){
             return NOT_FOUND;
@@ -64,7 +73,13 @@ public class AuthorServiceMvc implements AuthorService{
         return buildNames(authors);
     }
 
-    @Override public Author update(Author author){
+    @Override
+    @HystrixCommand(commandKey = "update", fallbackMethod = "buildFallbackRows")
+    public Author update(Author author){
         return repository.save(author);
+    }
+
+    public void buildFallbackRows() {
+        throw new WHODataAccessException("Database is not available");
     }
 }

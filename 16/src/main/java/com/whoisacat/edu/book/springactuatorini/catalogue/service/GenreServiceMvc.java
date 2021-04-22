@@ -1,7 +1,9 @@
 package com.whoisacat.edu.book.springactuatorini.catalogue.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.book.springactuatorini.catalogue.repository.GenreRepository;
 import com.whoisacat.edu.book.springactuatorini.catalogue.domain.Genre;
+import com.whoisacat.edu.book.springactuatorini.catalogue.service.exception.WHODataAccessException;
 import com.whoisacat.edu.book.springactuatorini.catalogue.service.exception.WHOGenreAlreadyExists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +20,9 @@ public class GenreServiceMvc implements GenreService{
     }
 
     @Transactional
-    @Override public Genre findByNameOrCreate(String authorString){
+    @Override
+    @HystrixCommand(commandKey = "findByNameOrCreate", fallbackMethod = "buildFallbackRows")
+    public Genre findByNameOrCreate(String authorString){
         List<Genre> genres = repository.getByTitle(authorString);
         if(genres.size() == 1){
             return genres.get(0);
@@ -31,22 +35,34 @@ public class GenreServiceMvc implements GenreService{
         return repository.getById(id);
     }
 
-    @Override public long getGenresCount(){
+    @Override
+    @HystrixCommand(commandKey = "getGenresCount", fallbackMethod = "buildFallbackRows")
+    public long getGenresCount(){
         return repository.count();
     }
 
-    @Override public String getAllGenresString(){
+    @Override
+    @HystrixCommand(commandKey = "getAllGenresString", fallbackMethod = "buildFallbackRows")
+    public String getAllGenresString(){
         List<Genre> genresList = repository.getAllBy();
         return buildNames(genresList);
     }
 
     @Transactional(readOnly = true)
-    @Override public String findByName(String name){
+    @Override
+    @HystrixCommand(commandKey = "findByName", fallbackMethod = "buildFallbackRows")
+    public String findByName(String name){
         List<Genre> genresList = repository.getByTitle(name);
         return buildNames(genresList);
     }
 
-    @Override public Genre update(Genre genre){
+    @Override
+    @HystrixCommand(commandKey = "update", fallbackMethod = "buildFallbackRows")
+    public Genre update(Genre genre){
         return repository.save(genre);
+    }
+
+    public void buildFallbackRows() {
+        throw new WHODataAccessException("Database is not available");
     }
 }
