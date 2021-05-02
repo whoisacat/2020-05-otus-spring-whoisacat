@@ -1,6 +1,5 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.AuthorRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Author;
@@ -26,7 +25,6 @@ public class AuthorServiceMvc implements AuthorService{
 
     @Override
     @Transactional
-    @HystrixCommand(commandKey = "getAllAuthorsString", fallbackMethod = "buildFallbackRows")
     public String getAllAuthorsString(){
         List<Author> authorsList = repository.getAllBy();
         StringBuilder sb = new StringBuilder();
@@ -43,7 +41,6 @@ public class AuthorServiceMvc implements AuthorService{
 
     @Transactional
     @Override
-    @HystrixCommand(commandKey = "findByNameOrCreate", fallbackMethod = "buildFallbackRows")
     public Author findByNameOrCreate(String authorString){
         List<Author> authors = repository.getByTitle(authorString);
         if(authors.size() == 1){
@@ -57,14 +54,12 @@ public class AuthorServiceMvc implements AuthorService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "getAuthorsCount", fallbackMethod = "buildFallbackRows")
     public long getAuthorsCount(){
         return repository.count();
     }
 
     @Transactional(readOnly = true)
     @Override
-    @HystrixCommand(commandKey = "findByName", fallbackMethod = "buildFallbackRows")
     public String findByName(String name){
         List<Author> authors = repository.getByTitle(name);
         if(authors.isEmpty()){
@@ -74,12 +69,7 @@ public class AuthorServiceMvc implements AuthorService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "update", fallbackMethod = "buildFallbackRows")
     public Author update(Author author){
         return repository.save(author);
-    }
-
-    public void buildFallbackRows() {
-        throw new WHODataAccessException("Database is not available");
     }
 }

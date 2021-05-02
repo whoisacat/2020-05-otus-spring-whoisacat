@@ -1,6 +1,5 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Author;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Genre;
@@ -32,14 +31,12 @@ public class BookServiceMvc implements BookService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "findAll", fallbackMethod = "buildFallbackRows")
     public Page<Book> findAll(Pageable pageable){
         return new PageImpl<>(repository.getAllBy(pageable),pageable,repository.count());
     }
 
     @Transactional
     @Override
-    @HystrixCommand(commandKey = "addBook", fallbackMethod = "buildFallbackRows")
     public Book addBook(String bookString,String authorString,String genreString){
         Author author = authorService.findByNameOrCreate(authorString);
         Genre genre = genreService.findByNameOrCreate(genreString);
@@ -55,20 +52,17 @@ public class BookServiceMvc implements BookService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "getBooksCount", fallbackMethod = "buildFallbackRows")
     public long getBooksCount(){
         return repository.count();
     }
 
     @Transactional(readOnly = true)
     @Override
-    @HystrixCommand(commandKey = "findByAuthorId", fallbackMethod = "buildFallbackRows")
     public List<Book> findByAuthorId(long id){
         return repository.getByAuthorId(id);
     }
 
     @Override
-    @HystrixCommand(commandKey = "buildBooksString", fallbackMethod = "buildFallbackRows")
     public String buildBooksString(List<Book> existedBooks){
         StringBuilder sb = new StringBuilder();
         for(Book book : existedBooks){
@@ -83,13 +77,11 @@ public class BookServiceMvc implements BookService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "findById", fallbackMethod = "buildFallbackRows")
     public Optional<Book> findById(long id){
         return repository.findById(id);
     }
 
     @Override
-    @HystrixCommand(commandKey = "update", fallbackMethod = "buildFallbackRows")
     public Book update(BookDTO dto){
         Author author = new Author(dto.getAuthorId(),dto.getAuthorTitle());
         author = authorService.update(author);
@@ -101,12 +93,7 @@ public class BookServiceMvc implements BookService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "delete", fallbackMethod = "buildFallbackRows")
     public void delete(long id){
         repository.deleteById(id);
-    }
-
-    public void buildFallbackRows() {
-        throw new WHODataAccessException("Database is not available");
     }
 }

@@ -1,8 +1,8 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserRepository;
+import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +16,8 @@ public class WHOUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    @HystrixCommand(commandKey = "loadUserByUsername")
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByEmail(username).orElseThrow(UserNotFoundException::new);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

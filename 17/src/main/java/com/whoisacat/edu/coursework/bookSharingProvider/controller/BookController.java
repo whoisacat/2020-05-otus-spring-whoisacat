@@ -4,6 +4,7 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.BookService;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.UserSettingsService;
+import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserSettingsNotFound;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHOBookNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,14 +26,16 @@ public class BookController{
 
     @GetMapping("/")
     public String listFirstPage(Model model){
-        Page<Book> books = bookService.findAll(PageRequest.of(0,userSettingsService.getUserSettings().getRowsPerPage()));
+        Page<Book> books = bookService.findAll(PageRequest.of(0,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);
         return "list";
     }
 
     @GetMapping("/{pageNumber}")
     public String listPage(Model model,@PathVariable Integer pageNumber){
-        Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,userSettingsService.getUserSettings().getRowsPerPage()));
+        Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);
         if(pageNumber == 0){
             return "redirect:/";

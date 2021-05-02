@@ -72,8 +72,10 @@ create sequence user_seq
     CACHE 1;
 CREATE TABLE who_user(
     id BIGINT NOT NULL primary key,
-    username VARCHAR(255) NOT NULL UNIQUE,
-	password VARCHAR(255));
+    email VARCHAR(255) NOT NULL UNIQUE,
+	password VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255));
 ALTER SEQUENCE public.user_seq OWNED BY public.who_user.id;
 
 create sequence user_settings_seq

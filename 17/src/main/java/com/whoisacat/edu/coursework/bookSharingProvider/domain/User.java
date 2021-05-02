@@ -19,13 +19,15 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String email;//todo indexes, JPA validation
 
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "who_user_id")
     private Set<Role> roles = new HashSet<>();
+    private String firstName;
+    private String lastName;
 
     public Long getId() {
         return id;
@@ -35,12 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String username) {
+        this.email = username;
     }
 
     public String getPassword() {
@@ -67,5 +69,21 @@ public class User {
             authList.add(new SimpleGrantedAuthority(role.getRoleName().name()));
         }
         return authList;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 }

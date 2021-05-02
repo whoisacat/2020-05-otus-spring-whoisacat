@@ -1,6 +1,5 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.GenreRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Genre;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHODataAccessException;
@@ -21,7 +20,6 @@ public class GenreServiceMvc implements GenreService{
 
     @Transactional
     @Override
-    @HystrixCommand(commandKey = "findByNameOrCreate", fallbackMethod = "buildFallbackRows")
     public Genre findByNameOrCreate(String authorString){
         List<Genre> genres = repository.getByTitle(authorString);
         if(genres.size() == 1){
@@ -36,13 +34,11 @@ public class GenreServiceMvc implements GenreService{
     }
 
     @Override
-    @HystrixCommand(commandKey = "getGenresCount", fallbackMethod = "buildFallbackRows")
     public long getGenresCount(){
         return repository.count();
     }
 
     @Override
-    @HystrixCommand(commandKey = "getAllGenresString", fallbackMethod = "buildFallbackRows")
     public String getAllGenresString(){
         List<Genre> genresList = repository.getAllBy();
         return buildNames(genresList);
@@ -50,19 +46,13 @@ public class GenreServiceMvc implements GenreService{
 
     @Transactional(readOnly = true)
     @Override
-    @HystrixCommand(commandKey = "findByName", fallbackMethod = "buildFallbackRows")
     public String findByName(String name){
         List<Genre> genresList = repository.getByTitle(name);
         return buildNames(genresList);
     }
 
     @Override
-    @HystrixCommand(commandKey = "update", fallbackMethod = "buildFallbackRows")
     public Genre update(Genre genre){
         return repository.save(genre);
-    }
-
-    public void buildFallbackRows() {
-        throw new WHODataAccessException("Database is not available");
     }
 }

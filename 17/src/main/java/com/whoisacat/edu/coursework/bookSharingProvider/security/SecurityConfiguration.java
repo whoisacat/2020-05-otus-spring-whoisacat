@@ -34,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+            .and().authorizeRequests().antMatchers("/user/registration").permitAll()
             .and().authorizeRequests().antMatchers("/edit","/delete","/addBook", "/monitoring/**").hasRole("ADMIN")
             .and().authorizeRequests().antMatchers("/**").hasRole("USER")
             .and().formLogin()
@@ -45,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(userDetailsService);
     }
+
     @Bean
     public AuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
@@ -53,6 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(this.userDetailsService);
         return provider;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder(13);

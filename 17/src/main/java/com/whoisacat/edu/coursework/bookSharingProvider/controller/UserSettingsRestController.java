@@ -2,6 +2,7 @@ package com.whoisacat.edu.coursework.bookSharingProvider.controller;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.UserSettings;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.UserSettingsService;
+import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserSettingsNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserSettingsRestController{
 
     @GetMapping("userSettings")
     public ResponseEntity<UserSettings> getPsettings(){
-        return ResponseEntity.ok(service.getUserSettings());
+        return ResponseEntity.ok(service.getUserSettings().orElseThrow(UserSettingsNotFound::new));
     }
 
     @PostMapping(path = "userSettings")

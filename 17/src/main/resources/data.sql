@@ -17,8 +17,10 @@ INSERT INTO book (id,title,author_id,genre_id) VALUES (5,'Основы SQL',4,1)
 INSERT INTO book (id,title,author_id,genre_id) VALUES (6,'Внутреннее устройство LINUX',5,1);
 ALTER SEQUENCE book_seq RESTART WITH 7;
 
-INSERT INTO who_user (id,username,password) VALUES (1,'who','$2a$13$8c/moMd0sMVWPGKYe6660eQzy0ksOLtejtXIyiDJ89bknFvmAabAK');--'pass'
-INSERT INTO who_user (id,username,password) VALUES (2,'another0ne','$2a$13$pxJTRCJs/LXi1E8YmMOiNu5P/2Wyz/1ohiyI6BPAJj9qODxjD1Z.m');--anotherPass
+INSERT INTO who_user (id,email,password,first_name,last_name)
+    VALUES (1,'who@whoisacat.com','$2a$13$8c/moMd0sMVWPGKYe6660eQzy0ksOLtejtXIyiDJ89bknFvmAabAK','Антон','Цыпляшов');--'pass'
+INSERT INTO who_user (id,email,password,first_name,last_name)
+    VALUES (2,'another0ne@whoisacat.com','$2a$13$pxJTRCJs/LXi1E8YmMOiNu5P/2Wyz/1ohiyI6BPAJj9qODxjD1Z.m','Гогорий','Иванов');--anotherPass
 ALTER SEQUENCE user_seq RESTART WITH 3;
 
 INSERT INTO user_settings (id,user_id) VALUES (1,1);
