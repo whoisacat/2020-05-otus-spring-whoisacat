@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Genre;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.GenreRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHORequestClientException;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @Import(GenreServiceMvc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class GenreServiceMvcTest{
+@AutoConfigureEmbeddedDatabase
+class GenreServiceTest {
 
     private static final Genre GENRE_ODIN = new Genre(1L,"godin");
     private static final Genre GENRE_SECONDO = new Genre(2L,"second one");

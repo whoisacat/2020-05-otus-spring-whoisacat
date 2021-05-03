@@ -7,6 +7,7 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Genre;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHOBookAlreadyExists;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHODataAccessException;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @Import(BookServiceMvc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class BookServiceMvcTest{
+@AutoConfigureEmbeddedDatabase
+class BookServiceTest {
 
     private static final Author AUTHOR_ODIN = new Author(1L,"odin");
     private static final Genre GENRE_OGIN = new Genre(1L,"ogin");

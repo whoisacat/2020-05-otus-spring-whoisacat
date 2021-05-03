@@ -6,6 +6,7 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Author;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Genre;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHORequestClientException;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @Import(AuthorServiceMvc.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-class AuthorServiceMvcTest{
+@AutoConfigureEmbeddedDatabase
+class AuthorServiceTest {
 
     private static final Genre GENRE_1 = new Genre(1L,"1");
     private static final Author AUTHOR_1 = new Author(1L,"1");
