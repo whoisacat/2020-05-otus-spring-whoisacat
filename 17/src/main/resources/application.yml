@@ -55,3 +55,8 @@ logging:
     total-size-cap: 200MB
 #  level:
 #    root: DEBUG
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
