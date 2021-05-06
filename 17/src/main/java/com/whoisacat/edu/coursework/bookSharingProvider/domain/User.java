@@ -4,12 +4,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@Table(name = "who_user")
+@Table(name = "who_user",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"email"}),
+        indexes = {
+                @Index(columnList = "id"),
+                @Index(columnList = "email")})
 public class User {
 
     @Id
@@ -19,15 +21,25 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String email;//todo indexes, JPA validation
+    private String email;
 
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "who_user_id")
     private Set<Role> roles = new HashSet<>();
+
     private String firstName;
+
     private String lastName;
+
+    @OneToMany
+    @JoinColumn(name = "who_user_id")
+    private List<VisitingPlace> visitingPlaces = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "who_user_id")
+    private List<Book> books = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -85,5 +97,22 @@ public class User {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public List<VisitingPlace> getVisitingPlaces() {
+        return visitingPlaces;
+    }
+
+    public void setVisitingPlaces(
+            List<VisitingPlace> visitingPlaces) {
+        this.visitingPlaces = visitingPlaces;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

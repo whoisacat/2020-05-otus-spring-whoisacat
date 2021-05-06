@@ -4,7 +4,6 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.UserSettings;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserSettingsRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserSettingsNotFound;
-import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHODataAccessException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,26 +16,23 @@ public class UserSettingsService {
 
     public static final int INITIAL_ROWS_PER_PAGE_QUANTITY = 3;
     private final UserSettingsRepository repository;
+    private final UserService userService;
 
     public UserSettingsService(
-            UserSettingsRepository repository){
+            UserSettingsRepository repository,
+            UserService userService){
         this.repository = repository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
     public Optional<UserSettings> getUserSettings() {
-        String username = getUsernameFromSecurityContext();
+        String username = userService.getUsernameFromSecurityContext();
         return repository.findByUserEmail(username);
     }
 
-    private String getUsernameFromSecurityContext() {
-        SecurityContext ctxt = SecurityContextHolder.getContext();
-        String username = ((WHOUserPrincipal) ctxt.getAuthentication().getPrincipal()).getUsername();
-        return username;
-    }
-
     public void setRowsPerPage(Integer rowsPerPage) {
-        String username = getUsernameFromSecurityContext();
+        String username = userService.getUsernameFromSecurityContext();
         UserSettings userSettings = repository.findByUserEmail(username).orElseThrow(UserSettingsNotFound::new);
         userSettings.setRowsPerPage(rowsPerPage);
         repository.save(userSettings);

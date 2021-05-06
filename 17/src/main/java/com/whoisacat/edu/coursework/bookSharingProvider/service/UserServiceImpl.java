@@ -5,7 +5,11 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Role;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
 import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserDto;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserRepository;
+import com.whoisacat.edu.coursework.bookSharingProvider.security.WHOUserPrincipal;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserAlreadyExistException;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository repository,
             PasswordEncoder passwordEncoder,
-            UserSettingsService userSettingsService) {
+            @Lazy UserSettingsService userSettingsService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.userSettingsService = userSettingsService;
@@ -47,5 +51,11 @@ public class UserServiceImpl implements UserService {
 
     private Optional<User> emailExist(String email) {
         return repository.findByEmail(email);
+    }
+
+    public String getUsernameFromSecurityContext() {
+        SecurityContext ctxt = SecurityContextHolder.getContext();
+        String username = ((WHOUserPrincipal) ctxt.getAuthentication().getPrincipal()).getUsername();
+        return username;
     }
 }

@@ -1,5 +1,7 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,8 @@ public class UserSettings {
     private Long id;
     @Column(name = "rowsPerPage")
     private Integer rowsPerPage;
+
+    @JsonIgnore
     @JoinColumn
     @OneToOne
     private User user;

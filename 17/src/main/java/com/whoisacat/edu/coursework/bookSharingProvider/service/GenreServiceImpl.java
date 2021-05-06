@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class GenreServiceMvc implements GenreService{
+public class GenreServiceImpl implements GenreService{
 
     private final GenreRepository repository;
 
-    public GenreServiceMvc(GenreRepository repository){
+    public GenreServiceImpl(GenreRepository repository){
         this.repository = repository;
     }
 

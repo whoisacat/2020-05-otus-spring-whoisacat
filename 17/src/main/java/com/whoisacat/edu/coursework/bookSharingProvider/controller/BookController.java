@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class BookController{
+public class BookController {
 
     private final BookService bookService;
     private final UserSettingsService userSettingsService;
@@ -24,8 +24,27 @@ public class BookController{
         this.userSettingsService = userSettingsService;
     }
 
+    @GetMapping("/booking/")
+    public String findFirstPage(Model model) {
+        Page<Book> books = bookService.findWithRelativePlaces(PageRequest.of(0,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
+        model.addAttribute("books",books);
+        return "bookBookingPage";
+    }
+
+    @GetMapping("/booking/{pageNumber}")
+    public String findPage(Model model,@PathVariable Integer pageNumber) {
+        Page<Book> books = bookService.findWithRelativePlaces(PageRequest.of(pageNumber,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
+        model.addAttribute("books",books);
+        if(pageNumber == 0){
+            return "redirect:/booking/";
+        }
+        return "bookBookingPage";
+    }
+
     @GetMapping("/")
-    public String listFirstPage(Model model){
+    public String listFirstPage(Model model) {
         Page<Book> books = bookService.findAll(PageRequest.of(0,
                 userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);
@@ -33,7 +52,7 @@ public class BookController{
     }
 
     @GetMapping("/{pageNumber}")
-    public String listPage(Model model,@PathVariable Integer pageNumber){
+    public String listPage(Model model,@PathVariable Integer pageNumber) {
         Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,
                 userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);

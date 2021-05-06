@@ -1,4 +1,4 @@
-package com.whoisacat.edu.coursework.bookSharingProvider.service;
+package com.whoisacat.edu.coursework.bookSharingProvider.security;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
 import org.springframework.security.core.GrantedAuthority;

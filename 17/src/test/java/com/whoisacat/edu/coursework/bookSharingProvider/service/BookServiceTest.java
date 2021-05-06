@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с книгами должен")
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import(BookServiceMvc.class)
+@Import(BookServiceImpl.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureEmbeddedDatabase
 class BookServiceTest {
@@ -42,12 +42,13 @@ class BookServiceTest {
     private static final String GENRE_STRING = "genreString";
     private static final String AUTHOR_STRING = "authorString";
 
-    @Autowired
-    private BookServiceMvc service;
+    @Autowired private BookServiceImpl service;
 
     @MockBean private BookRepository repository;
     @MockBean private AuthorService authorService;
     @MockBean private GenreService genreService;
+    @MockBean private VisitingPlaceService visitingPlaceService;
+    @MockBean private UserService userService;
 
     @DisplayName(value = "Должен вернуть то же что и дао")
     @Test

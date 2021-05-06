@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с авторами должен")
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import(AuthorServiceMvc.class)
+@Import(AuthorServiceImpl.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureEmbeddedDatabase
 class AuthorServiceTest {
@@ -40,7 +40,7 @@ class AuthorServiceTest {
     private static final Author AUTHOR_2 = new Author(2L,"2");
 
     @Autowired
-    private AuthorServiceMvc service;
+    private AuthorServiceImpl service;
 
     @MockBean
     private AuthorRepository repository;
@@ -76,7 +76,7 @@ class AuthorServiceTest {
     @Test
     void foundNoOneAuthorByName(){
         when(repository.getByTitle("name")).thenReturn(new ArrayList<>());
-        assertThat(service.findByName("name")).isEqualTo(AuthorServiceMvc.NOT_FOUND);
+        assertThat(service.findByName("name")).isEqualTo(AuthorServiceImpl.NOT_FOUND);
     }
 
     @Test

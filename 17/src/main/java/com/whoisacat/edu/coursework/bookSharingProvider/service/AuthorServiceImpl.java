@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class AuthorServiceMvc implements AuthorService{
+public class AuthorServiceImpl implements AuthorService{
 
     public static final String NOT_FOUND = "Не найден";
     private final AuthorRepository repository;
     private final BookService bookService;
 
-    public AuthorServiceMvc(AuthorRepository repository,@Lazy BookService bookService){
+    public AuthorServiceImpl(AuthorRepository repository,@Lazy BookService bookService){
         this.repository = repository;
         this.bookService = bookService;
     }

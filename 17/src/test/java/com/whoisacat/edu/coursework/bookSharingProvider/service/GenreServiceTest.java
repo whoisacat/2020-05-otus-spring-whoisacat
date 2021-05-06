@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Сервис для работы с жанрами должен")
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import(GenreServiceMvc.class)
+@Import(GenreServiceImpl.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureEmbeddedDatabase
 class GenreServiceTest {
@@ -31,7 +31,7 @@ class GenreServiceTest {
     private static final Genre GENRE_ODIN = new Genre(1L,"godin");
     private static final Genre GENRE_SECONDO = new Genre(2L,"second one");
 
-    @Autowired GenreServiceMvc service;
+    @Autowired GenreServiceImpl service;
 
     @MockBean GenreRepository repository;
 

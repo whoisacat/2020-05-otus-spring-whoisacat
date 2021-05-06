@@ -5,4 +5,6 @@ import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserDto;
 
 public interface UserService {
     User registerNewUserAccount(UserDto userDto);
+
+    String getUsernameFromSecurityContext();
 }

@@ -17,17 +17,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookServiceMvc implements BookService{
+public class BookServiceImpl implements BookService{
 
     private final BookRepository repository;
     private final AuthorService authorService;
     private final GenreService genreService;
+    private final VisitingPlaceService visitingPlaceService;
+    private final UserService userService;
 
-    public BookServiceMvc(BookRepository repository,AuthorService authorService,
-                          GenreService genreService){
+    public BookServiceImpl(BookRepository repository, AuthorService authorService,
+            GenreService genreService, VisitingPlaceService visitingPlaceService,
+            UserService userService){
         this.repository = repository;
         this.authorService = authorService;
         this.genreService = genreService;
+        this.visitingPlaceService = visitingPlaceService;
+        this.userService = userService;
     }
 
     @Override
@@ -95,5 +100,9 @@ public class BookServiceMvc implements BookService{
     @Override
     public void delete(long id){
         repository.deleteById(id);
+    }
+
+    @Override public Page<Book> findWithRelativePlaces(Pageable pageable) {
+        return repository.getWithRelativePlaces(pageable, userService.getUsernameFromSecurityContext());
     }
 }

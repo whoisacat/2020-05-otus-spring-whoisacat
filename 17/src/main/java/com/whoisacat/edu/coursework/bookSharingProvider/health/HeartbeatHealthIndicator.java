@@ -39,7 +39,7 @@ public class HeartbeatHealthIndicator implements HealthIndicator {
         }
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 60000)
     public void heartbeat() {
         repository.save(new Heartbeat(LocalDateTime.now()));
     }

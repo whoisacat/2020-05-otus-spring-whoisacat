@@ -1,6 +1,5 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.security;
 
-import com.whoisacat.edu.coursework.bookSharingProvider.service.WHOUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
