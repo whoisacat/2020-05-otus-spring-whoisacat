@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @PasswordMatches
-public class UserDto {
+public class UserRegistrationDTO {
 
     @NotNull
     @NotEmpty

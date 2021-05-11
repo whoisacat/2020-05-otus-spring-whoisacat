@@ -1,7 +1,9 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookAndUserDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookDTO;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookDetailDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,5 +29,11 @@ public interface BookService extends NamedService<Book>{
 
     void delete(long id);
 
-    Page<Book> findWithRelativePlaces(Pageable pageable);
+    Page<BookAndUserDTO> findOtherPeoplesBooksInUsersCities(Pageable pageable, String text);
+
+    void takeABookingRequest(Long id);
+
+    Page<BookAndUserDTO> findOwnBooksInUsersCities(PageRequest pageable, String text);
+
+    BookDetailDTO findBookDetailInfo(Long bookId);
 }

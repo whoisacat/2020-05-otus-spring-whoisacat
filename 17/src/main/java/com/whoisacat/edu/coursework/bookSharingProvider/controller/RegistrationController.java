@@ -1,7 +1,7 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.controller;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
-import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserDto;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserRegistrationDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.UserService;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserAlreadyExistException;
 import org.springframework.stereotype.Controller;
@@ -26,24 +26,24 @@ public class RegistrationController {
 
     @GetMapping("/user/registration")
     public String showRegistrationForm(WebRequest request, Model model) {
-        UserDto userDto = new UserDto();
-        model.addAttribute("user", userDto);
+        UserRegistrationDTO userRegistrationDto = new UserRegistrationDTO();
+        model.addAttribute("user", userRegistrationDto);
         return "registration";
     }
 
     @PostMapping("/user/registration")
     public ModelAndView registerUserAccount(
-            @ModelAttribute("user") @Valid UserDto userDto,
+            @ModelAttribute("user") @Valid UserRegistrationDTO userRegistrationDto,
             HttpServletRequest request) {
 
         try {
-            User registered = userService.registerNewUserAccount(userDto);
+            User registered = userService.registerNewUserAccount(userRegistrationDto);
         } catch (UserAlreadyExistException uaeEx) {
             ModelAndView mav = new ModelAndView("emailError");
             mav.addObject("message", "An account for that username/email already exists.");
             return mav;
         }
 
-        return new ModelAndView("successRegister", "user", userDto);
+        return new ModelAndView("successRegister", "user", userRegistrationDto);
     }
 }

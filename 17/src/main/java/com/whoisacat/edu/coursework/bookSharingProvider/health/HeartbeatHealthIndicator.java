@@ -2,6 +2,7 @@ package com.whoisacat.edu.coursework.bookSharingProvider.health;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.health.Heartbeat;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.health.HeartbeatRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,6 +14,8 @@ import java.util.List;
 @Component
 public class HeartbeatHealthIndicator implements HealthIndicator {
 
+    @Value("${com.whoisacat.bookSharingProvider.health.heartbeat.period}")
+    private int HEARTBEAT_PERIOD = 1000;
     private final HeartbeatRepository repository;
 
     public HeartbeatHealthIndicator(
@@ -24,12 +27,12 @@ public class HeartbeatHealthIndicator implements HealthIndicator {
         LocalDateTime now = LocalDateTime.now();
         List<Heartbeat> heartbeats;
         try {
-            heartbeats = repository.getAllByHeartbeatTimeIsAfter(now.minusSeconds(5));
+            heartbeats = repository.getAllByHeartbeatTimeIsAfter(now.minusSeconds(HEARTBEAT_PERIOD / 1000 * 5));
         } catch(Exception e) {
             return Health.down().withDetail("cause", repository.getClass().getSimpleName() + " unavailable").build();
         }
-        if (heartbeats.size() < 4) {
-            if (heartbeats.stream().anyMatch(h -> h.getHeartbeatTime().isAfter(now.minusSeconds(2)))) {
+        if (heartbeats.size() < HEARTBEAT_PERIOD / 1000 * 4) {
+            if (heartbeats.stream().anyMatch(h -> h.getHeartbeatTime().isAfter(now.minusSeconds(HEARTBEAT_PERIOD / 1000 * 2)))) {
                 return Health.status("RISE").withDetail("count_of_heartbeats", heartbeats.size()).build();
             } else {
                 return Health.down().build();
@@ -39,7 +42,7 @@ public class HeartbeatHealthIndicator implements HealthIndicator {
         }
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelayString = "${com.whoisacat.bookSharingProvider.health.heartbeat.period}", initialDelay=1000)
     public void heartbeat() {
         repository.save(new Heartbeat(LocalDateTime.now()));
     }

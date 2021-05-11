@@ -60,3 +60,9 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /api-docs
+com:
+  whoisacat:
+    bookSharingProvider:
+      health:
+        heartbeat:
+          period: 1000

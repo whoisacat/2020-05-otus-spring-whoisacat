@@ -21,7 +21,8 @@ INSERT INTO book (id,title,author_id,genre_id,who_user_id) VALUES (3,'Идеал
 INSERT INTO book (id,title,author_id,genre_id,who_user_id) VALUES (4,'Разработка через тестирование',2,1,2);
 INSERT INTO book (id,title,author_id,genre_id,who_user_id) VALUES (5,'Основы SQL',4,1,2);
 INSERT INTO book (id,title,author_id,genre_id,who_user_id) VALUES (6,'Внутреннее устройство LINUX',5,1,2);
-ALTER SEQUENCE book_seq RESTART WITH 7;
+INSERT INTO book (id,title,author_id,genre_id,who_user_id) VALUES (7,'Чистая архитектура',3,1,1);
+ALTER SEQUENCE book_seq RESTART WITH 8;
 
 INSERT INTO user_settings (id,user_id) VALUES (1,1);
 INSERT INTO user_settings (id,user_id) VALUES (2,2);
@@ -34,5 +35,6 @@ ALTER SEQUENCE who_role_seq RESTART WITH 4;
 
 INSERT INTO visiting_place (id,country,city,street,house,orient,who_user_id) VALUES (1,'Россия','Екатеринбург','улица 8 Марта','194','секция Д, вывеска Автодиллер',1);
 INSERT INTO visiting_place (id,country,city,street,house,orient,who_user_id) VALUES (2,'Россия','Екатеринбург','улица Красноармейская','27','ФОК Факел',1);
-INSERT INTO visiting_place (id,country,city,street,house,orient,who_user_id) VALUES (3,'Россия','Екатеринбург','улица Ктрова','71','СК ВИЗ',2);
+INSERT INTO visiting_place (id,country,city,street,house,orient,who_user_id) VALUES (3,'Россия','Екатеринбург','улица Кирова','71','СК ВИЗ',2);
 INSERT INTO visiting_place (id,country,city,street,house,orient,who_user_id) VALUES (4,'Россия','Санкт-Петербург','улица Учителей','2','АО Диаконт',2);
+ALTER SEQUENCE visiting_place_seq RESTART WITH 5;

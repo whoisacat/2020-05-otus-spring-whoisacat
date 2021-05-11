@@ -1,5 +1,6 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -33,8 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-            .and().authorizeRequests().antMatchers("/user/registration").permitAll()
-            .and().authorizeRequests().antMatchers("/edit","/delete","/addBook", "/monitoring/**").hasRole("ADMIN")
+            .and().authorizeRequests().antMatchers( "/user/registration", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+            .and().authorizeRequests().antMatchers("/edit","/delete","/addBook", "/monitoring/**").hasRole("ADMIN")//todo переосмыслить
             .and().authorizeRequests().antMatchers("/**").hasRole("USER")
             .and().formLogin()
             .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

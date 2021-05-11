@@ -1,7 +1,9 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.controller;
 
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookAndUserDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookDTO;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookDetailDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.BookService;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.UserSettingsService;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserSettingsNotFound;
@@ -11,6 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class BookController {
@@ -24,42 +29,59 @@ public class BookController {
         this.userSettingsService = userSettingsService;
     }
 
-    @GetMapping("/booking/")
-    public String findFirstPage(Model model) {
-        Page<Book> books = bookService.findWithRelativePlaces(PageRequest.of(0,
-                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
-        model.addAttribute("books",books);
-        return "bookBookingPage";
-    }
-
-    @GetMapping("/booking/{pageNumber}")
-    public String findPage(Model model,@PathVariable Integer pageNumber) {
-        Page<Book> books = bookService.findWithRelativePlaces(PageRequest.of(pageNumber,
-                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
-        model.addAttribute("books",books);
-        if(pageNumber == 0){
-            return "redirect:/booking/";
-        }
-        return "bookBookingPage";
+    @GetMapping("details")
+    public String getDetails(Model model, @RequestParam(name = "id") Long bookId) {
+        BookDetailDTO book = bookService.findBookDetailInfo(bookId);
+        model.addAttribute("dto", book);
+        return "details";
     }
 
     @GetMapping("/")
+    public String findPage(Model model, @RequestParam(name = "search_text", required = false) String text,
+            @RequestParam(name = "page", required = false) Integer page) {
+        if (page == null) {
+            page = 0;
+        }
+        Page<BookAndUserDTO> books = bookService.findOtherPeoplesBooksInUsersCities(PageRequest.of(page,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()), text);
+        model.addAttribute("books", books);
+        return "search";
+    }
+
+    @GetMapping("booking")
+    public String bookBookById(Model model, @RequestParam(name = "search_text", required = false) String text,
+            @RequestParam(name = "page", required = false) Integer page, @RequestParam(name = "id") Long bookId,
+            RedirectAttributes redirectAttributes) {
+        bookService.takeABookingRequest(bookId);
+        model.addAttribute("books", bookService.findOtherPeoplesBooksInUsersCities(PageRequest.of(page,
+                userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()), text));
+
+        byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+        String utf8EncodedText = new String(bytes, StandardCharsets.UTF_8);
+        redirectAttributes.addAttribute("search_text", text);
+        redirectAttributes.addAttribute("page", page);
+        return "redirect:/";
+//        return "search";
+        //todo вообще, нужно открывать информацию о держателе
+    }
+
+    @GetMapping("/mememe")
     public String listFirstPage(Model model) {
         Page<Book> books = bookService.findAll(PageRequest.of(0,
                 userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);
-        return "list";
+        return "my_list";
     }
 
-    @GetMapping("/{pageNumber}")
+    @GetMapping("/mememe/{pageNumber}")
     public String listPage(Model model,@PathVariable Integer pageNumber) {
         Page<Book> books = bookService.findAll(PageRequest.of(pageNumber,
                 userSettingsService.getUserSettings().orElseThrow(UserSettingsNotFound::new).getRowsPerPage()));
         model.addAttribute("books",books);
         if(pageNumber == 0){
-            return "redirect:/";
+            return "redirect:/mememe/";
         }
-        return "list";
+        return "my_list";
     }
 
     @GetMapping("/edit")
@@ -75,13 +97,13 @@ public class BookController {
     public String saveBook(BookDTO dto,Model model) {
         Book book = bookService.update(dto);
         model.addAttribute(book);
-        return "redirect:/";
+        return "redirect:/mememe/";
     }
 
     @GetMapping("/delete")
     public String deleteBook(@RequestParam("id") long id) {
         bookService.delete(id);
-        return "redirect:/";
+        return "redirect:/mememe/";
     }
 
     @GetMapping("/addBook")
@@ -92,7 +114,7 @@ public class BookController {
     @PostMapping("/addBook")
     public String insertBook(BookDTO dto) {
         bookService.addBook(dto.getTitle(),dto.getAuthorTitle(),dto.getGenreTitle());
-        return "redirect:/";
+        return "redirect:/mememe/";
     }
 
     @Controller

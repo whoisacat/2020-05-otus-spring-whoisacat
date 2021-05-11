@@ -29,18 +29,38 @@
             color: #fff;
             width: 100%;
         }
+        #search_text {
+            resize: horizontal;
+            width: 20%;
+        }
+
+        #search_text:active {
+            width: auto;
+        }
+
+        #search_text:focus {
+            min-width: 40%;
+        }
     </style>
     <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div style="width: 80%; position: fixed; left: 10%" >
+    <span>
+        <a href="/logout"> Выйти</a>
+    </span><p/>
+    <span>
+        <a href="/mememe"> На свою страницу</a>
+    </span>
     <div class="psettings">
     </div>
-    <div style="alignment: left;text-align: left;">
-        <span id="title">Книги:</span>
-        <span style="position: fixed; right: 10%">
-            <form action="/addBook" style="alignment: right">
-                <input type="submit" value="Добавить книгу" />
+    <div style="alignment: left;text-align: left;border-color: black; border-width: thick">
+        <span id="title">Найдены книги:</span>
+        <span style="position: fixed; right: 10%; border-color: black; border-width: thick">
+            <form action="/">
+                <input type="text" id="search_text" th:name="search_text" name="search_text" required th:value="${books.searchText}"
+                       maxlength="50" autofocus height="20" placeholder="Текст поиска" style="position: fixed; right: 20%">
+                <input type="submit" value="Найти" height="20" style=""/>
             </form>
         </span>
     </div>
@@ -56,26 +76,33 @@
         <tbody>
         <tr th:each="book : ${books.content}">
             <td th:text="${book.title}">Some book</td>
-            <td th:text="${book.author.title}">1</td>
-            <td th:text="${book.genre.title}">1</td>
+            <td th:text="${book.author}">1</td>
+            <td th:text="${book.genre}">1</td>
             <td>
-                <span><a th:href="@{/edit(id=${book.id})}" href="edit.html">Редактировать</a></span>
+                <span><a th:href="@{/booking/(id=${book.id},search_text=${books.searchText},page=${books.getPageable().getPageNumber()})}"
+                         href="edit.html">Взять книгу</a></span>
                 <span>&emsp;</span>
-                <span><a th:href="@{/delete(id=${book.id})}" href="list.html">Удалить</a></span>
+                <span><a th:href="@{/details(id=${book.id})}" href="details.html">Подробнее</a></span>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
     <div Страницы id="footer">
-        <span th:if="${books.hasPrevious()}"><a th:href="@{${books.previousOrFirstPageable().getPageNumber()}}" href="list.html"/>Предыдущая</span>
+        <span th:if="${books.hasPrevious()} and ${books.getPageable().getPageNumber() == 1}">
+            <a th:href="@{/(search_text=${books.searchText})}" href="search.html"/>Предыдущая
+        </span>
+        <span th:if="${books.hasPrevious()} and ${books.getPageable().getPageNumber() != 1}">
+            <a th:href="@{/(page=${books.previousOrFirstPageable().getPageNumber()},search_text=${books.searchText})}" href="search.html"/>Предыдущая
+        </span>
         <span style='padding-left:10px;'> </span>
-        <span th:if="${books.hasNext()}"><a th:href="@{${books.nextPageable().getPageNumber()}}" href="list.html"/>Следующая</span>
+        <span th:if="${books.hasNext()}">
+            <a th:href="@{/(page=${books.nextPageable().getPageNumber()},search_text=${books.searchText})}" href="search.html"/>Следующая
+        </span>
     </div>
 </div>
 <script>
     $(function () {
-
         $.get('/userSettings').done(function (psettings) {
             $(".psettings").append(`
                 <span>

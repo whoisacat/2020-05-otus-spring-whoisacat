@@ -4,14 +4,13 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.UserSettings;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserSettingsRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserSettingsNotFound;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserSettingsService {
 
     public static final int INITIAL_ROWS_PER_PAGE_QUANTITY = 3;

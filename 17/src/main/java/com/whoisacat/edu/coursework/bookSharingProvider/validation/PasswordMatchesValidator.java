@@ -1,6 +1,6 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.validation;
 
-import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserDto;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserRegistrationDTO;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -14,7 +14,7 @@ public class PasswordMatchesValidator
 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        UserDto user = (UserDto) obj;
+        UserRegistrationDTO user = (UserRegistrationDTO) obj;
         return user.getPassword().equals(user.getMatchingPassword());
     }
 }

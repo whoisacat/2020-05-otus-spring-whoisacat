@@ -1,10 +1,10 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.repository;
 
-import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.BookAndUserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookCustomRepository {
 
-    Page<Book> getWithRelativePlaces(Pageable pageable, String usernameFromSecurityContext);
+    Page<BookAndUserDTO> getBooksInUsersCities(Pageable pageable, String username, String text, boolean own);
 }

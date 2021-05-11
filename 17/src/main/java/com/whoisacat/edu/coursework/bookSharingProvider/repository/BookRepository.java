@@ -4,7 +4,6 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;

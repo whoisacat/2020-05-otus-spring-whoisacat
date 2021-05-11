@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Book Sharing provider. Details</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <h1>Детальная информация о книге и ее держателе:</h1>
+
+    <div class="row">
+        <label for="title">Название:</label>
+        <input id="title" type="text" readonly="readonly" th:value="${dto.title}" value="Название книги"/>
+    </div>
+
+    <div class="row">
+        <label for="author-title">Автор:</label>
+        <input id="author-title" type="text" readonly="readonly" th:value="${dto.author}" value="Некоторый автор"/>
+    </div>
+
+    <div class="row">
+        <label for="genre-title">Жанр:</label>
+        <input id="genre-title" type="text" readonly="readonly" th:value="${dto.genre}" value="Некоторый жанр"/>
+    </div>
+
+    <div class="row">
+        <label for="holder-input">Держатель:</label>
+        <input id="holder-input" type="text" readonly="readonly" th:value="${dto.user}" value="Некоторый пользователь"/>
+    </div>
+
+    <div class="row">
+        <label for="email-input">email:</label>
+        <input id="email-input" type="text" readonly="readonly" th:value="${dto.email}" value="user@server.top-level"/>
+    </div>
+
+    <div>
+        <table class="places" align="center" width="100%" style="border-collapse: collapse">
+            <thead>
+                <tr>
+                    <th>Страна</th>
+                    <th>Город</th>
+                    <th>Улица</th>
+                    <th>Дом</th>
+                    <th>Ориентир</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="place : ${dto.places}">
+                    <td th:text="${place.country}">Россия</td>
+                    <td th:text="${place.city}">Екатеринбург</td>
+                    <td th:text="${place.street}">8 Марта</td>
+                    <td th:text="${place.house}">194</td>
+                    <td th:text="${place.orient}">Бизнесгалерея, секция Д, Флаги Автодилер</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<!--    <div class="row"> тут будет кнопка бронировать-->
+<!--        <button type="submit">Save</button>-->
+<!--    </div>-->
+</div>
+
+</body>
+</html>

@@ -1,12 +1,14 @@
 package com.whoisacat.edu.coursework.bookSharingProvider.service;
 
+import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.ROLES;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Role;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
-import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserDto;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserRegistrationDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.security.WHOUserPrincipal;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserAlreadyExistException;
+import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,14 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerNewUserAccount(UserDto userDto) throws UserAlreadyExistException {
+    public User registerNewUserAccount(UserRegistrationDTO userRegistrationDto) throws UserAlreadyExistException {
 
-        emailExist(userDto.getEmail()).ifPresent(UserAlreadyExistException::new);
+        emailExist(userRegistrationDto.getEmail()).ifPresent(UserAlreadyExistException::new);
         User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
+        user.setFirstName(userRegistrationDto.getFirstName());
+        user.setLastName(userRegistrationDto.getLastName());
+        user.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
+        user.setEmail(userRegistrationDto.getEmail());
         Role role = new Role();
         role.setRoleName(ROLES.ROLE_USER);
         user.getRoles().add(role);
@@ -57,5 +59,18 @@ public class UserServiceImpl implements UserService {
         SecurityContext ctxt = SecurityContextHolder.getContext();
         String username = ((WHOUserPrincipal) ctxt.getAuthentication().getPrincipal()).getUsername();
         return username;
+    }
+
+    @Transactional(readOnly = true)
+    @Override public User getCurrentUser() {
+        return repository.findByEmail(getUsernameFromSecurityContext()).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override public User save(User user) {
+        return repository.save(user);
+    }
+
+    @Override public User getByBook(Book book) {
+        return repository.findByBooksContaining(book);
     }
 }
