@@ -30,10 +30,16 @@
             width: 100%;
         }
     </style>
-    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div style="width: 80%; position: fixed; left: 10%" >
+    <span>
+        <a href="/"> К поиску</a>
+    </span>
+    <span>
+        <a href="/user/mememe"> На свою страницу</a>
+    </span>
     <div class="psettings">
     </div>
     <div style="alignment: left;text-align: left;">
@@ -56,26 +62,25 @@
         <tbody>
         <tr th:each="book : ${books.content}">
             <td th:text="${book.title}">Some book</td>
-            <td th:text="${book.author.title}">1</td>
-            <td th:text="${book.genre.title}">1</td>
+            <td th:text="${book.authorTitle}">1</td>
+            <td th:text="${book.genreTitle}">1</td>
             <td>
-                <span><a th:href="@{/edit(id=${book.id})}" href="edit.html">Редактировать</a></span>
+                <span><a th:href="@{/books/edit(id=${book.id})}" href="edit.html">Редактировать</a></span>
                 <span>&emsp;</span>
-                <span><a th:href="@{/delete(id=${book.id})}" href="list.html">Удалить</a></span>
+                <span><a th:href="@{/books/delete(id=${book.id})}" href="list.html">Удалить</a></span>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
     <div Страницы id="footer">
-        <span th:if="${books.hasPrevious()}"><a th:href="@{${books.previousOrFirstPageable().getPageNumber()}}" href="list.html"/>Предыдущая</span>
+        <span th:if="${books.hasPrevious()}"><a th:href="@{/books/my/paged(page=${books.previousOrFirstPageable().getPageNumber()})}" href="list.html"/>Предыдущая</span>
         <span style='padding-left:10px;'> </span>
-        <span th:if="${books.hasNext()}"><a th:href="@{${books.nextPageable().getPageNumber()}}" href="list.html"/>Следующая</span>
+        <span th:if="${books.hasNext()}"><a th:href="@{/books/my/paged(page=${books.nextPageable().getPageNumber()})}" href="list.html"/>Следующая</span>
     </div>
 </div>
 <script>
     $(function () {
-
         $.get('/userSettings').done(function (psettings) {
             $(".psettings").append(`
                 <span>

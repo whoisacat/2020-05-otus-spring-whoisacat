@@ -7,9 +7,11 @@ ENV PROJECT_DIR=/opt/project
 RUN mkdir -p $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 RUN git clone https://github.com/whoisacat/2020-05-otus-spring-whoisacat.git
-WORKDIR 2020-05-otus-spring-whoisacat
 
-WORKDIR 16
+WORKDIR 2020-05-otus-spring-whoisacat
+# todo убрать чекаут до мержа в мастер
+RUN git checkout 17_curs_work
+WORKDIR 17
 RUN mvn dependency:resolve
 RUN mvn install -DskipTests
 

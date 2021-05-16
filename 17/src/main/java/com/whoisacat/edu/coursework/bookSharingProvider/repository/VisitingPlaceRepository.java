@@ -13,4 +13,7 @@ public interface VisitingPlaceRepository extends CrudRepository<VisitingPlace, L
                    " where wu.email like :email ",
             nativeQuery = true)
     List<String> getCitiesByUsername(@Param("email") String username);
+
+    @Query(value = "select vp from User user left join user.visitingPlaces vp where user.email like :email")
+    List<VisitingPlace> getVisitingPlaceByUserEmail(@Param("email") String email);
 }

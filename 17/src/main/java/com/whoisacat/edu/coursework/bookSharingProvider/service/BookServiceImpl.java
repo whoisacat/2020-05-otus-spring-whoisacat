@@ -14,7 +14,6 @@ import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHOBoo
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHODataAccessException;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.WHOSameHoldersException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,11 +40,6 @@ public class BookServiceImpl implements BookService{
         this.genreService = genreService;
         this.visitingPlaceService = visitingPlaceService;
         this.userService = userService;
-    }
-
-    @Override
-    public Page<Book> findAll(Pageable pageable){
-        return new PageImpl<>(repository.getAllBy(pageable),pageable,repository.count());
     }
 
     @Transactional
@@ -76,20 +70,6 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public String buildBooksString(List<Book> existedBooks){
-        StringBuilder sb = new StringBuilder();
-        for(Book book : existedBooks){
-            sb.append(book.getTitle())
-                    .append(" ")
-                    .append(book.getAuthor().getTitle())
-                    .append(" ")
-                    .append(book.getGenre().getTitle())
-                    .append("; ");
-        }
-        return sb.toString();
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Optional<Book> findById(long id){
         return repository.findById(id);
@@ -114,13 +94,18 @@ public class BookServiceImpl implements BookService{
     @Transactional(readOnly = true)
     @Override public Page<BookAndUserDTO> findOtherPeoplesBooksInUsersCities(Pageable pageable, String text) {
         String email = userService.getUsernameFromSecurityContext();
-        return repository.getBooksInUsersCities(pageable, email, text, false);
+        return repository.getBooks(pageable, email, text, false);
     }
 
     @Transactional(readOnly = true)
-    @Override public Page<BookAndUserDTO> findOwnBooksInUsersCities(PageRequest pageable, String text) {
+    @Override public Page<BookAndUserDTO> findOwnBooks(PageRequest pageable, String text) {
         String email = userService.getUsernameFromSecurityContext();
-        return repository.getBooksInUsersCities(pageable, email, text, true);
+        return repository.getBooks(pageable, email, text, true);
+    }
+
+    @Override public Page<BookDTO> findOwnBooks(PageRequest pageable) {
+        String email = userService.getUsernameFromSecurityContext();
+        return repository.getOwnBooks(email, pageable);
     }
 
     @Override public BookDetailDTO findBookDetailInfo(Long bookId) {

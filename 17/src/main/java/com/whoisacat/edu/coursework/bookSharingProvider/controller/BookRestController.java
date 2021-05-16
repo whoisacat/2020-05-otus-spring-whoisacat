@@ -28,7 +28,7 @@ public class BookRestController {
     @GetMapping("search/own")
     public ResponseEntity<Page<BookAndUserDTO>> findOwnBooks(@RequestParam(name = "text", required = false) String text,
             @RequestParam(name = "page") Integer page, @RequestParam(name = "size") Integer size) {
-        return ResponseEntity.ok(bookService.findOwnBooksInUsersCities(PageRequest.of(page, size), text));
+        return ResponseEntity.ok(bookService.findOwnBooks(PageRequest.of(page, size), text));
     }
 
     @PutMapping("booking")

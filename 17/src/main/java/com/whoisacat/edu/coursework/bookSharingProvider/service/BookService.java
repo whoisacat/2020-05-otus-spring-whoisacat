@@ -13,15 +13,11 @@ import java.util.Optional;
 
 public interface BookService extends NamedService<Book>{
 
-    Page<Book> findAll(Pageable pageable);
-
     Book addBook(String book,String author,String genre);
 
     long getBooksCount();
 
     List<Book> findByAuthorId(long id);
-
-    String buildBooksString(List<Book> existedBooks);
 
     Optional<Book> findById(long id);
 
@@ -33,7 +29,9 @@ public interface BookService extends NamedService<Book>{
 
     void takeABookingRequest(Long id);
 
-    Page<BookAndUserDTO> findOwnBooksInUsersCities(PageRequest pageable, String text);
+    Page<BookAndUserDTO> findOwnBooks(PageRequest pageable, String text);
+
+    Page<BookDTO> findOwnBooks(PageRequest pageable);
 
     BookDetailDTO findBookDetailInfo(Long bookId);
 }

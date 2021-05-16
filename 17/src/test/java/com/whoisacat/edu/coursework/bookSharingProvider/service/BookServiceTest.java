@@ -50,15 +50,6 @@ class BookServiceTest {
     @MockBean private VisitingPlaceService visitingPlaceService;
     @MockBean private UserService userService;
 
-    @DisplayName(value = "Должен вернуть то же что и дао")
-    @Test
-    void findAll(){
-        PageRequest pr = PageRequest.of(0,100);
-        when(repository.getAllBy(pr)).thenReturn(Lists.newArrayList(BOOK_ODIN));
-        Page<Book> page = new PageImpl<>(Lists.newArrayList(BOOK_ODIN));
-        assertThat(service.findAll(pr).toList()).isEqualTo(page.toList());
-    }
-
     @DisplayName(value = "Должен выбросить исключение если книга не добавилась")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test

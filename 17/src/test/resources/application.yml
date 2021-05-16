@@ -20,3 +20,9 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: validate
+com:
+  whoisacat:
+    bookSharingProvider:
+      health:
+        heartbeat:
+          period: 1000

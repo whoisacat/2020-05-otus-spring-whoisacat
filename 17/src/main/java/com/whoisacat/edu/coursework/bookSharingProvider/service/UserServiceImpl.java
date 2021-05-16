@@ -4,7 +4,9 @@ import com.whoisacat.edu.coursework.bookSharingProvider.domain.Book;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.ROLES;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.Role;
 import com.whoisacat.edu.coursework.bookSharingProvider.domain.User;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.EditUserDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.dto.UserRegistrationDTO;
+import com.whoisacat.edu.coursework.bookSharingProvider.dto.VisitingPlaceDTO;
 import com.whoisacat.edu.coursework.bookSharingProvider.repository.UserRepository;
 import com.whoisacat.edu.coursework.bookSharingProvider.security.WHOUserPrincipal;
 import com.whoisacat.edu.coursework.bookSharingProvider.service.exception.UserAlreadyExistException;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,13 +28,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final UserSettingsService userSettingsService;
+    private final VisitingPlaceService visitingPlacesService;
 
     public UserServiceImpl(UserRepository repository,
             PasswordEncoder passwordEncoder,
-            @Lazy UserSettingsService userSettingsService) {
+            @Lazy UserSettingsService userSettingsService,
+            @Lazy VisitingPlaceService visitingPlacesService) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.userSettingsService = userSettingsService;
+        this.visitingPlacesService = visitingPlacesService;
     }
 
     @Override
@@ -64,6 +70,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override public User getCurrentUser() {
         return repository.findByEmail(getUsernameFromSecurityContext()).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    @Override public EditUserDTO getEditUserDTO() {
+        User user = repository.findByEmail(getUsernameFromSecurityContext()).orElseThrow(UserNotFoundException::new);
+        List<VisitingPlaceDTO> places = visitingPlacesService.toDTO(visitingPlacesService.getCurrentUserVisitingPlaces());
+        return new EditUserDTO(user.getFirstName(), user.getLastName(), user.getEmail(), places, "readonly");
     }
 
     @Override public User save(User user) {
