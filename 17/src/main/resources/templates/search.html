@@ -79,10 +79,10 @@
             <td th:text="${book.author}">1</td>
             <td th:text="${book.genre}">1</td>
             <td>
-                <span><a th:href="@{/booking/(id=${book.id},search_text=${books.searchText},page=${books.getPageable().getPageNumber()})}"
+                <span><a th:href="@{/books/booking/(id=${book.id},search_text=${books.searchText},page=${books.getPageable().getPageNumber()})}"
                          href="edit.html">Взять книгу</a></span>
                 <span>&emsp;</span>
-                <span><a th:href="@{/details(id=${book.id})}" href="details.html">Подробнее</a></span>
+                <span><a th:href="@{/books/details(id=${book.id})}" href="details.html">Подробнее</a></span>
             </td>
         </tr>
         </tbody>

@@ -47,10 +47,10 @@ management:
       enabled: true
 logging:
   file:
-    path: ./springactuatorini
+    path: ./springactuator
     clean-history-on-start: true
     max-history: 7
-    name: web-library.log
+    name: book-sharing-provider.log
     max-size: 100MB
     total-size-cap: 200MB
 #  level:
