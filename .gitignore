@@ -18,3 +18,4 @@
 /.idea/vcs.xml
 /spring-shell.log
 /*.log
+/*.log.*

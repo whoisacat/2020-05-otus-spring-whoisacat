@@ -25,23 +25,23 @@
 <body>
 
 <!-- Book addition -->
-<form id="add-book-form" th:action="@{/addBook}" th:method="post" action="addBook.html">
+<form id="add-book-form" th:action="@{/books/addBook}" th:method="post" action="addBook.html">
     <h1>Book Info:</h1>
 
     <div class="row">
-        <label for="title-input">Name:</label>
+        <label for="title-input">Название:</label>
         <input id="title-input" name="title" type="text"/>
     </div>
 
 <!-- Author -->
     <div class="row">
-        <label for="author-title-input">Name:</label>
+        <label for="author-title-input">Автор:</label>
         <input id="author-title-input" name="authorTitle" type="text" />
     </div>
 
 <!-- Genre -->
     <div class="row">
-        <label for="genre-title-input">Name:</label>
+        <label for="genre-title-input">Жанр:</label>
         <input id="genre-title-input" name="genreTitle" type="text" />
     </div>
 

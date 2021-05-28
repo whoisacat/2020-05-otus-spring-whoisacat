@@ -55,6 +55,9 @@ public class BookServiceImpl implements BookService{
         if(book == null){
             throw new WHODataAccessException("bookDaoInsertHasReturnedNull");
         }
+        User currentUser = userService.getCurrentUser();
+        currentUser.getBooks().add(book);
+        userService.save(currentUser);
         return book;
     }
 

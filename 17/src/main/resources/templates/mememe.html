@@ -26,6 +26,9 @@
 <body>
     <div>
         <span>
+            <a href="/logout"> Выйти</a>
+        </span><p/>
+        <span>
             <a href="/"> К поиску</a>
         </span>
         <br>
@@ -76,11 +79,10 @@
         </div>
     </div>
     <script>
-
         $(function () {
                 $(".addplace").append(`
                     <div>
-                        <form id="add-place" th:action="@{/visitingPlace}" th:method="post" action="visitingPlace">
+                        <form id="add-place" th:action="@{/visitingPlace}" th:method="post" action="/visitingPlace">
                             <h1>Добавить место посещения:</h1>
 
                             <span class="row">
