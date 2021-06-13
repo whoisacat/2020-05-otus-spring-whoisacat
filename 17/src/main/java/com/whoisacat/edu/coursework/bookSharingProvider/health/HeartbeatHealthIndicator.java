@@ -23,7 +23,8 @@ public class HeartbeatHealthIndicator implements HealthIndicator {
         this.repository = repository;
     }
 
-    @Override public Health health() {
+    @Override
+    public Health health() {
         LocalDateTime now = LocalDateTime.now();
         List<Heartbeat> heartbeats;
         try {
